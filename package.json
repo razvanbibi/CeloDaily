@@ -18,10 +18,11 @@
     "@vercel/og": "^0.8.6",
     "ethers": "^6.15.0",
     "next": "14.2.11",
-    "permissionless": "^0.3.2",
+    "ox": "^0.11.3",
+    "permissionless": "^0.3.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "viem": "^2.42.0"
+    "viem": "^2.47.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

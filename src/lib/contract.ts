@@ -1,11 +1,11 @@
 // src/lib/contract.ts
 "use client";
-
 import { BrowserProvider, Contract, formatUnits } from "ethers";
-
 
 export const OXTXN_STREAK_CONTRACT =
   "0x9D028f81d30C366079882aBb7255Edba0d34Ea80" as const;
+  const PAYMASTER_RPC =
+  "https://api.developer.coinbase.com/rpc/v1/base/KbNJV5E8r843PcyhzAPpKAcVzieP7RYH";
 
 export const BASE_CHAIN_ID_HEX = "0x2105"; // 8453 dec
 
@@ -150,17 +150,16 @@ export function getEthereum() {
 }
 
 // provider + signer + contract পাওয়ার হেল্পার
+
 export async function getContractWithSigner() {
   const eth = getEthereum();
-  if (!eth) throw new Error("MetaMask / wallet পাওয়া যায়নি");
+  if (!eth) throw new Error("Wallet not found");
 
-  const provider = new BrowserProvider(eth);
+  const provider = new BrowserProvider(
+    new (window as any).ethereum.constructor(PAYMASTER_RPC)
+  );
+
   const signer = await provider.getSigner();
-  const network = await provider.getNetwork();
-
-  if (network.chainId !== BigInt(8453)) {
-    throw new Error("Please switch network to Base mainnet");
-  }
 
   const contract = new Contract(
     OXTXN_STREAK_CONTRACT,
@@ -168,7 +167,11 @@ export async function getContractWithSigner() {
     signer
   );
 
-  return { provider, signer, contract };
+  return {
+    provider,
+    signer,
+    contract,
+  };
 }
 
 // শুধু read করার জন্য (signer ছাড়াই)
