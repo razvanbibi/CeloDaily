@@ -6,7 +6,8 @@ import {
   getContractWithSigner,
   getReadOnlyContract,
   formatToken,
-  PAYMASTER_RPC
+  OXTXN_STREAK_CONTRACT,
+  OXTXN_STREAK_ABI
 } from "@/lib/contract";
 
 
@@ -642,20 +643,25 @@ useEffect(() => {
       const prevPending = pendingTokens ?? BigInt(0);
 
       await ensureBaseNetwork();
-      const { contract } = await getContractWithSigner();
-      const tx = await contract.checkIn({
-  customData: {
-    paymasterService: {
-      url: PAYMASTER_RPC
-    }
-  }
+      const { smartAccountClient } = await getContractWithSigner();
+
+const hash = await smartAccountClient.writeContract({
+  account: account as `0x${string}`,
+  address: OXTXN_STREAK_CONTRACT,
+  abi: OXTXN_STREAK_ABI,
+  functionName: "checkIn",
+});
+
+setStatus("Check-in pending... waiting for confirmation.");
+
+await smartAccountClient.waitForUserOperationReceipt({
+  hash,
 });
       const pending = (await refreshData())?.pending ?? BigInt(0);
       setPendingTokens(pending);
 
 
-      setStatus("Check-in pending... waiting for confirmation.");
-      await tx.wait();
+
 
       await fetch("/api/leaderboard/register", {
         method: "POST",
@@ -760,16 +766,20 @@ useEffect(() => {
       const claimAmount = pendingTokens;
 
       await ensureBaseNetwork();
-      const { contract } = await getContractWithSigner();
-      const tx = await contract.claimAll({
-  customData: {
-    paymasterService: {
-      url: PAYMASTER_RPC
-    }
-  }
+      const { smartAccountClient } = await getContractWithSigner();
+
+const hash = await smartAccountClient.writeContract({
+  account: account as `0x${string}`,
+  address: OXTXN_STREAK_CONTRACT,
+  abi: OXTXN_STREAK_ABI,
+  functionName: "claimAll",
 });
-      setStatus("Claim pending... waiting for confirmation.");
-      await tx.wait();
+
+setStatus("Claim pending... waiting for confirmation.");
+
+await smartAccountClient.waitForUserOperationReceipt({
+  hash,
+});
 
       setRecentlyClaimed(true);
       await refreshData();

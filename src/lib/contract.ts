@@ -2,7 +2,7 @@
 "use client";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
 import { createSmartAccountClient } from "permissionless";
-import { http } from "viem";
+import { http, createWalletClient, custom } from "viem";
 import { base } from "viem/chains";
 
 export const OXTXN_STREAK_CONTRACT =
@@ -162,10 +162,15 @@ export async function getContractWithSigner() {
 
   const signer = await provider.getSigner();
 
-  const smartAccountClient = createSmartAccountClient({
+  const walletClient = createWalletClient({
+  chain: base,
+  transport: custom(eth),
+});
+
+const smartAccountClient = createSmartAccountClient({
+  account: walletClient.account,
   chain: base,
   bundlerTransport: http(PAYMASTER_RPC),
-  paymasterTransport: http(PAYMASTER_RPC),
 });
 
   const contract = new Contract(
