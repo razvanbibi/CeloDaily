@@ -1,14 +1,13 @@
 // src/lib/contract.ts
 "use client";
+
 import { BrowserProvider, Contract, formatUnits } from "ethers";
-import { createSmartAccountClient } from "permissionless";
-import { http, createWalletClient, custom } from "viem";
-import { base } from "viem/chains";
+
 
 export const OXTXN_STREAK_CONTRACT =
   "0x9D028f81d30C366079882aBb7255Edba0d34Ea80" as const;
   export const PAYMASTER_RPC =
-  "https://api.developer.coinbase.com/rpc/v1/base/KbNJV5E8r843PcyhzAPpKAcVzieP7RYH";
+  "https://api.developer.coinbase.com/rpc/v1/base/KbNJVsE8r843PcyhzAPpKAcVzieP7RYH";
 
 export const BASE_CHAIN_ID_HEX = "0x2105"; // 8453 dec
 
@@ -153,19 +152,17 @@ export function getEthereum() {
 }
 
 // provider + signer + contract পাওয়ার হেল্পার
-
 export async function getContractWithSigner() {
   const eth = getEthereum();
-  if (!eth) throw new Error("Wallet not found");
+  if (!eth) throw new Error("MetaMask / wallet পাওয়া যায়নি");
 
   const provider = new BrowserProvider(eth);
-
   const signer = await provider.getSigner();
+  const network = await provider.getNetwork();
 
-  const smartAccountClient = createSmartAccountClient({
-  chain: base,
-  bundlerTransport: http(PAYMASTER_RPC),
-});
+  if (network.chainId !== BigInt(8453)) {
+    throw new Error("Please switch network to Base mainnet");
+  }
 
   const contract = new Contract(
     OXTXN_STREAK_CONTRACT,
@@ -173,14 +170,9 @@ export async function getContractWithSigner() {
     signer
   );
 
-  return {
-    provider,
-    signer,
-    contract,
-    smartAccountClient
-  };
+  return { provider, signer, contract };
 }
- 
+
 // শুধু read করার জন্য (signer ছাড়াই)
 export async function getReadOnlyContract() {
   const eth = getEthereum();
