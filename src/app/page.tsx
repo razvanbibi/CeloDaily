@@ -656,8 +656,7 @@ const provider = sdk.getProvider();
 
 const fromAddress = await getBaseAccountAddress();
 
-if (!fromAddress)
-  throw new Error("No smart wallet found");
+
 
 
 await provider.request({
