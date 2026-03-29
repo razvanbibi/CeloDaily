@@ -903,88 +903,230 @@ await provider.request({
   }
 
   async function handleDonateClick() {
-    try {
-      if (!account) {
-        setStatus("Connect your wallet first.");
-        return;
-      }
 
-      const raw = donationAmount.trim();
-      const amountNumber = Number(raw);
+  try {
 
-      if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
-        setStatus("Enter a valid donation amount.");
-        return;
-      }
+    if (!account) {
 
-      // USDC = 6 decimals
-      const amountScaled = BigInt(Math.round(amountNumber * 1_000_000));
+      setStatus("Connect your wallet first.");
 
-      setLoading(true);
-      setStatus(`Sending ${amountNumber} USDC donation on Base…`);
+      return;
 
-      await ensureBaseNetwork();
-
-      // USDC + signer
-      const { signer, usdc } = await getUsdcContractWithSigner();
-
-      // 1) allowance চেক
-      setStatus("Checking USDC allowance…");
-      const currentAllowance: bigint = await usdc.allowance(
-        account,
-        DONATION_CONTRACT
-      );
-
-      if (currentAllowance < amountScaled) {
-        setStatus("Approving USDC for donations…");
-        const txApprove = await usdc.approve(DONATION_CONTRACT, amountScaled);
-        await txApprove.wait();
-      }
-
-      // 2) BaseDailyDonations কনট্রাক্টে donate কল
-      const donationAbi = ["function donate(uint256 amount) external"];
-      const donationContract = new ethers.Contract(
-        DONATION_CONTRACT,
-        donationAbi,
-        signer
-      );
-
-      setStatus("Sending donation transaction…");
-      const tx = await donationContract.donate(amountScaled);
-      setStatus("Donation pending... waiting for confirmation.");
-      await tx.wait();
-
-      // 3) অনচেইন থেকে লিডারবোর্ড রিলোড
-      await loadDonationLeaderboard();
-
-      showToast(
-        {
-          type: "donation",
-          message: `Thank you! Donated ${amountNumber} USDC.`,
-        },
-        2500
-      );
-    } catch (err: any) {
-      console.error(err);
-
-      const msg = String(
-        err?.info?.error?.message ??
-        err?.shortMessage ??
-        err?.message ??
-        ""
-      ).toLowerCase();
-
-      if (msg.includes("user denied") || msg.includes("rejected")) {
-        setStatus("Donation cancelled.");
-      } else {
-        setStatus(err?.message ?? "Donation failed.");
-      }
-
-      setTimeout(() => setStatus(null), 3000);
-    } finally {
-      setLoading(false);
     }
+
+    const raw = donationAmount.trim();
+
+    const amountNumber = Number(raw);
+
+    if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
+
+      setStatus("Enter a valid donation amount.");
+
+      return;
+
+    }
+
+    const amountScaled = BigInt(
+      Math.round(amountNumber * 1_000_000)
+    );
+
+    setLoading(true);
+
+    setStatus(`Preparing gasless donation...`);
+
+    await ensureBaseNetwork();
+
+    const sdk = getBaseAccountSDK();
+
+    const provider = sdk.getProvider();
+
+    const fromAddress = await getBaseAccountAddress();
+
+
+
+    const erc20Abi = [
+
+      {
+
+        name: "approve",
+
+        type: "function",
+
+        stateMutability: "nonpayable",
+
+        inputs: [
+
+          { name: "spender", type: "address" },
+
+          { name: "amount", type: "uint256" }
+
+        ],
+
+        outputs: [
+
+          { type: "bool" }
+
+        ]
+
+      }
+
+    ] as const;
+
+
+
+    const donationAbi = [
+
+      {
+
+        name: "donate",
+
+        type: "function",
+
+        stateMutability: "nonpayable",
+
+        inputs: [
+
+          { name: "amount", type: "uint256" }
+
+        ],
+
+        outputs: []
+
+      }
+
+    ] as const;
+
+
+
+    await provider.request({
+
+      method: "wallet_sendCalls",
+
+      params: [{
+
+        version: "1.0",
+
+        chainId: BASE_CHAIN_HEX,
+
+        from: fromAddress,
+
+        calls: [
+
+          {
+
+            to: BASE_USDC_ADDRESS,
+
+            value: "0x0",
+
+            data: encodeFunctionData({
+
+              abi: erc20Abi,
+
+              functionName: "approve",
+
+              args: [
+
+                DONATION_CONTRACT,
+
+                amountScaled
+
+              ],
+
+            }),
+
+          },
+
+          {
+
+            to: DONATION_CONTRACT,
+
+            value: "0x0",
+
+            data: encodeFunctionData({
+
+              abi: donationAbi,
+
+              functionName: "donate",
+
+              args: [
+
+                amountScaled
+
+              ],
+
+            }),
+
+          },
+
+        ],
+
+        capabilities: {
+
+          paymasterService: {
+
+            url: PAYMASTER_RPC,
+
+          },
+
+        },
+
+      }],
+
+    });
+
+
+
+    setStatus("Donation pending...");
+
+
+
+    await loadDonationLeaderboard();
+
+
+
+    showToast(
+
+      {
+
+        type: "donation",
+
+        message: `Thank you! Donated ${amountNumber} USDC 💙`,
+
+      },
+
+      2500
+
+    );
+
   }
+
+  catch (err: any) {
+
+    console.error(err);
+
+
+
+    setStatus(
+
+      err?.info?.error?.message ??
+
+      err?.shortMessage ??
+
+      err?.message ??
+
+      "Donation failed."
+
+    );
+
+  }
+
+  finally {
+
+    setLoading(false);
+
+  }
+
+}
 
 
   async function handleShare() {
