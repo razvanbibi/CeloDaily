@@ -381,43 +381,138 @@ useEffect(() => {
   ];
 
   async function handleMintIdentity() {
-    try {
-      if (!account) {
-        setStatus("Connect wallet first");
-        return;
+
+  try {
+
+    if (!account) {
+
+      setStatus("Connect wallet first");
+
+      return;
+
+    }
+
+    setLoading(true);
+
+    setStatus("Preparing gasless mint...");
+
+    await ensureBaseNetwork();
+
+
+
+    const sdk = getBaseAccountSDK();
+
+    const provider = sdk.getProvider();
+
+    const fromAddress = await getBaseAccountAddress();
+
+
+
+    const identityAbi = [
+
+      {
+
+        name: "mint",
+
+        type: "function",
+
+        stateMutability: "nonpayable",
+
+        inputs: [],
+
+        outputs: []
+
       }
 
-      await ensureBaseNetwork();
+    ] as const;
 
-      const eth = getEthereum();
-      if (!eth) return;
 
-      const provider = new ethers.BrowserProvider(eth as any);
-      const signer = await provider.getSigner();
 
-      const nft = new ethers.Contract(
-        IDENTITY_NFT_ADDRESS,
-        IDENTITY_NFT_ABI,
-        signer
-      );
+    await provider.request({
 
-      setStatus("Minting identity NFT...");
-      const tx = await nft.mint();
-      await tx.wait();
+      method: "wallet_sendCalls",
 
-      setHasIdentityNFT(true);
+      params: [{
 
-      setStatus("Identity NFT minted 🎉");
-      setShowMintIdentity(false);
-    } catch (err: any) {
-      console.error(err);
-      setStatus(
-        err?.shortMessage ??
-        err?.message ??
-        "Mint failed"
-      );
-    }
+        version: "1.0",
+
+        chainId: BASE_CHAIN_HEX,
+
+        from: fromAddress,
+
+        calls: [
+
+          {
+
+            to: IDENTITY_NFT_ADDRESS,
+
+            value: "0x0",
+
+            data: encodeFunctionData({
+
+              abi: identityAbi,
+
+              functionName: "mint",
+
+            }),
+
+          }
+
+        ],
+
+        capabilities: {
+
+          paymasterService: {
+
+            url: PAYMASTER_RPC,
+
+          },
+
+        },
+
+      }],
+
+    });
+
+
+
+    setHasIdentityNFT(true);
+
+    setStatus("Identity NFT minted 🎉");
+
+    setShowMintIdentity(false);
+
+
+
   }
+
+  catch (err: any) {
+
+    console.error(err);
+
+
+
+    setStatus(
+
+      err?.info?.error?.message ??
+
+      err?.shortMessage ??
+
+      err?.message ??
+
+      "Mint failed"
+
+    );
+
+  }
+
+  finally {
+
+    setLoading(false);
+
+  }
+
+}
   async function getUsdcContractWithSigner() {
     const eth = getEthereum();
     if (!eth) throw new Error("Wallet not found");
