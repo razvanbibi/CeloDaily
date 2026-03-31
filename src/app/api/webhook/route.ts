@@ -1,57 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
+import { Redis } from "@upstash/redis";
 
-export async function POST(req: NextRequest) {
+const redis = Redis.fromEnv();
 
-  try {
+export async function POST(req: Request) {
 
-    const body = await req.json();
+  const body = await req.json();
 
-    console.log("miniapp webhook event:", body);
+  if (body.type === "frame_notification") {
 
-    /*
-    event example:
+    const fid = body.data.fid;
+    const token = body.data.notification_token;
 
-    {
-      type: "miniapp_added",
-      data: {
-        fid: 12345
-      }
-    }
-
-    */
-
-    const fid = body?.data?.fid;
-
-    if (fid) {
-
-      await fetch(
-        process.env.APP_URL + "/api/store-fid",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            fid
-          })
-        }
-      );
-
-    }
-
-    return NextResponse.json({
-      ok: true
-    });
-
-  } catch (err) {
-
-    console.error(err);
-
-    return NextResponse.json(
-      { error: "webhook failed" },
-      { status: 500 }
+    await redis.set(
+      `basedaily:notificationToken:${fid}`,
+      token
     );
 
   }
+
+  return new Response("ok");
 
 }
