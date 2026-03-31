@@ -1,39 +1,55 @@
 import { NextResponse } from "next/server";
 
-import { getAllFids }
+import { getAllFids } from "@/lib/getAllFids";
 
-from "@/lib/getAllFids";
-
-import { sendBroadcastNotification }
-
-from "@/lib/sendNotification";
+import { sendBroadcastNotification } from "@/lib/sendNotification";
 
 export async function GET() {
 
-  const fids = await getAllFids();
+  try {
 
-  console.log(
+    const fids = await getAllFids();
 
-    "sending notification to",
+    console.log("fids:", fids);
 
-    fids.length,
+    if (!fids.length) {
 
-    "users"
+      return NextResponse.json({
 
-  );
+        message: "no users found",
 
-  await sendBroadcastNotification(
+        success: false
 
-    fids
+      });
 
-  );
+    }
 
-  return NextResponse.json({
+    await sendBroadcastNotification(fids);
 
-    success: true,
+    return NextResponse.json({
 
-    total: fids.length
+      success: true,
 
-  });
+      total: fids.length
+
+    });
+
+  } catch (err) {
+
+    console.error("broadcast error:", err);
+
+    return NextResponse.json(
+
+      {
+
+        error: "broadcast failed"
+
+      },
+
+      { status: 500 }
+
+    );
+
+  }
 
 }

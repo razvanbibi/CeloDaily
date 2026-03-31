@@ -4,26 +4,46 @@ const redis = Redis.fromEnv();
 
 export async function getAllFids(): Promise<number[]> {
 
-  const keys = await redis.keys(
+  try {
 
-    "basedaily:profile:*"
+    const keys = await redis.keys("basedaily:profile:*");
 
-  );
+    if (!keys.length) {
 
-  const fids: number[] = [];
+      console.log("no profile keys");
 
-  for (const key of keys) {
-
-    const profile = await redis.hgetall(key);
-
-    if (profile?.fid) {
-
-      fids.push(Number(profile.fid));
+      return [];
 
     }
 
-  }
+    const fids: number[] = [];
 
-  return fids;
+    for (const key of keys) {
+
+      const profile = await redis.hgetall(key);
+
+      if (profile?.fid) {
+
+        const fidNumber = Number(profile.fid);
+
+        if (!isNaN(fidNumber)) {
+
+          fids.push(fidNumber);
+
+        }
+
+      }
+
+    }
+
+    return [...new Set(fids)];
+
+  } catch (err) {
+
+    console.error("getAllFids error:", err);
+
+    return [];
+
+  }
 
 }

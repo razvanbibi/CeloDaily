@@ -12,30 +12,32 @@ export async function sendBroadcastNotification(
 
 ) {
 
-  if (!fids.length) {
+  try {
 
-    console.log("no fids");
+    await client.publishFrameNotifications({
 
-    return;
+      targetFids: fids,
+
+      notification: {
+
+        title: "🔥 BaseDaily is now Gasless",
+
+        body: "All tx fees are now sponsored by 0xtxn",
+
+        target_url:
+
+          "https://basedaily-miniapp.vercel.app"
+
+      }
+
+    });
+
+  } catch (err) {
+
+    console.error("notification error:", err);
+
+    throw err;
 
   }
-
-  await client.publishFrameNotifications({
-
-    targetFids: fids,
-
-    notification: {
-
-      title: "🔥 BaseDaily is now Gasless",
-
-      body: "All tx fees are now sponsored by 0xtxn",
-
-      target_url:
-
-        "https://basedaily-miniapp.vercel.app"
-
-    }
-
-  });
 
 }
