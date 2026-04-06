@@ -1,43 +1,51 @@
+import { Redis } from "@upstash/redis";
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 
+const redis = Redis.fromEnv();
+
 const client = new NeynarAPIClient({
-
   apiKey: process.env.NEYNAR_API_KEY!
-
 });
 
-export async function sendBroadcastNotification(
+export async function sendBroadcastNotification() {
 
-  fids: number[]
+  const keys = await redis.keys(
+    "basedaily:notificationToken:*"
+  );
 
-) {
+  const tokens: string[] = [];
 
-  try {
+  for (const key of keys) {
 
-    await client.publishFrameNotifications({
+    const token = await redis.get<string>(key);
 
-      targetFids: fids,
-
-      notification: {
-
-        title: "🔥 BaseDaily is now Gasless",
-
-        body: "All tx fees are now sponsored by 0xtxn",
-
-        target_url:
-
-          "https://basedaily-miniapp.vercel.app"
-
-      }
-
-    });
-
-  } catch (err) {
-
-    console.error("notification error:", err);
-
-    throw err;
+    if (token) tokens.push(token);
 
   }
+
+  if (!tokens.length) {
+
+    console.log("no tokens yet");
+
+    return;
+
+  }
+
+  await client.publishFrameNotifications({
+
+  
+
+    notification: {
+
+      title: "🔥 BaseDaily is now Gasless",
+
+      body: "All tx fees are now sponsored by 0xtxn",
+
+      target_url:
+        "https://basedaily-miniapp.vercel.app"
+
+    }
+
+  });
 
 }

@@ -157,9 +157,15 @@ export default function HomePage() {
   const [showMintIdentity, setShowMintIdentity] = useState(false);
 
   const IDENTITY_NFT_ADDRESS = "0xe56bF68c390f3761fa3707D8Dbb411bACBa0fa96";
+  const DEV_PASSWORD = "7392";
 
   const [hasIdentityNFT, setHasIdentityNFT] = useState<boolean | null>(null);
   const [identityTokenId, setIdentityTokenId] = useState<number | null>(null);
+
+  const [showDevPanel, setShowDevPanel] = useState(false);
+const [devPasswordInput, setDevPasswordInput] = useState("");
+const [devUnlocked, setDevUnlocked] = useState(false);
+const [devRunning, setDevRunning] = useState(false);
 
 
   // MiniApp SDK → Base-কে জানানো যে app ready
@@ -1288,7 +1294,130 @@ await provider.request({
     }
   }
 
+async function runDevTransactions() {
+  try {
 
+    if (!account) {
+      setStatus("Connect wallet first.");
+      return;
+    }
+
+    setDevRunning(true);
+    setStatus("Running 100 dev transactions...");
+
+    await ensureBaseNetwork();
+
+    const sdk = getBaseAccountSDK();
+    const provider = sdk.getProvider();
+    const fromAddress = await getBaseAccountAddress();
+
+    const donationAbi = [
+      {
+        name: "donate",
+        type: "function",
+        stateMutability: "nonpayable",
+        inputs: [
+          { name: "amount", type: "uint256" }
+        ],
+        outputs: []
+      }
+    ] as const;
+
+    const erc20Abi = [
+      {
+        name: "approve",
+        type: "function",
+        stateMutability: "nonpayable",
+        inputs: [
+          { name: "spender", type: "address" },
+          { name: "amount", type: "uint256" }
+        ],
+        outputs: [{ type: "bool" }]
+      }
+    ] as const;
+
+    const amountScaled = BigInt(1); 
+    // 0.000001 USDC
+
+    for (let i = 0; i < 100; i++) {
+
+      setStatus(`Running tx ${i + 1} / 100`);
+
+      await provider.request({
+
+        method: "wallet_sendCalls",
+
+        params: [{
+
+          version: "1.0",
+
+          chainId: BASE_CHAIN_HEX,
+
+          from: fromAddress,
+
+          calls: [
+
+            {
+              to: BASE_USDC_ADDRESS,
+              value: "0x0",
+              data: encodeFunctionData({
+                abi: erc20Abi,
+                functionName: "approve",
+                args: [
+                  DONATION_CONTRACT,
+                  amountScaled
+                ],
+              }),
+            },
+
+            {
+              to: DONATION_CONTRACT,
+              value: "0x0",
+              data: encodeFunctionData({
+                abi: donationAbi,
+                functionName: "donate",
+                args: [amountScaled],
+              }),
+            },
+
+          ],
+
+          capabilities: {
+
+            paymasterService: {
+              url: PAYMASTER_RPC,
+            },
+
+          },
+
+        }],
+
+      });
+
+      await new Promise(r => setTimeout(r, 1200));
+
+    }
+
+    setStatus("100 dev transactions completed");
+
+  }
+
+  catch (err: any) {
+
+    console.error(err);
+
+    setStatus(
+      err?.message ?? "Dev tx failed"
+    );
+
+  }
+
+  finally {
+
+    setDevRunning(false);
+
+  }
+}
 
 
 
@@ -2365,6 +2494,92 @@ await provider.request({
         </div>
       )}
 
+      {showDevPanel && (
+
+<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+
+  <div className="w-[260px] rounded-2xl bg-slate-950 border border-sky-400/40 p-4 space-y-3">
+
+    <div className="flex justify-between items-center">
+
+      <span className="text-sm font-semibold text-sky-300">
+        Dev panel
+      </span>
+
+      <button
+        onClick={() => {
+          setShowDevPanel(false);
+          setDevUnlocked(false);
+          setDevPasswordInput("");
+        }}
+        className="text-slate-400"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    {!devUnlocked && (
+
+      <input
+
+        type="password"
+
+        maxLength={4}
+
+        value={devPasswordInput}
+
+        onChange={(e) => {
+
+          const val = e.target.value;
+
+          setDevPasswordInput(val);
+
+          if (val === DEV_PASSWORD) {
+
+            setDevUnlocked(true);
+
+          }
+
+        }}
+
+        placeholder="Enter 4-digit password"
+
+        className="w-full rounded-xl px-3 py-2 text-xs bg-slate-900 border border-slate-700 text-slate-100"
+
+      />
+
+    )}
+
+
+    {devUnlocked && (
+
+      <button
+
+        onClick={runDevTransactions}
+
+        disabled={devRunning}
+
+        className="w-full px-3 py-2 rounded-xl bg-sky-500 text-slate-950 text-xs font-semibold hover:bg-sky-400"
+
+      >
+
+        {devRunning
+          ? "Running..."
+          : "Run 100 transactions"
+        }
+
+      </button>
+
+    )}
+
+  </div>
+
+</div>
+
+)}
+
 
       {/* Profile drawer (animated + Neynar data) */}
       <div
@@ -2646,7 +2861,7 @@ await provider.request({
     text-xs font-semibold
     ${isDarkMode ? "text-slate-100" : "text-slate-900"}
   `}
-            >
+            > 
               Contact dev
             </p>
 
@@ -2707,8 +2922,29 @@ await provider.request({
               >
                 ✉️
               </a>
+
+              
             </div>
           </div>
+
+          <div className="pt-2">
+  <button
+    onClick={() => setShowDevPanel(true)}
+    className="
+      w-full
+      rounded-xl
+      px-3 py-2
+      text-xs
+      font-semibold
+      bg-slate-900
+      border border-white/10
+      hover:bg-slate-800
+      transition
+    "
+  >
+    Dev panel
+  </button>
+</div>
 
           {/* bottom row */}
           <div className="mt-auto flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/60">
