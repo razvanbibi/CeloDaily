@@ -157,7 +157,7 @@ export default function HomePage() {
   const [showMintIdentity, setShowMintIdentity] = useState(false);
 
   const IDENTITY_NFT_ADDRESS = "0xe56bF68c390f3761fa3707D8Dbb411bACBa0fa96";
-  const DEV_PASSWORD = "7392";
+  const DEV_PASSWORD = "1245";
 
   const [hasIdentityNFT, setHasIdentityNFT] = useState<boolean | null>(null);
   const [identityTokenId, setIdentityTokenId] = useState<number | null>(null);
@@ -1295,6 +1295,7 @@ await provider.request({
   }
 
 async function runDevTransactions() {
+
   try {
 
     if (!account) {
@@ -1303,13 +1304,14 @@ async function runDevTransactions() {
     }
 
     setDevRunning(true);
-    setStatus("Running 100 dev transactions...");
+    setStatus("Preparing 100 batched transactions...");
 
     await ensureBaseNetwork();
 
     const sdk = getBaseAccountSDK();
     const provider = sdk.getProvider();
     const fromAddress = await getBaseAccountAddress();
+
 
     const donationAbi = [
       {
@@ -1322,6 +1324,7 @@ async function runDevTransactions() {
         outputs: []
       }
     ] as const;
+
 
     const erc20Abi = [
       {
@@ -1336,69 +1339,81 @@ async function runDevTransactions() {
       }
     ] as const;
 
+
     const amountScaled = BigInt(1); 
     // 0.000001 USDC
 
+
+    const calls = [];
+
+
     for (let i = 0; i < 100; i++) {
 
-      setStatus(`Running tx ${i + 1} / 100`);
+      calls.push(
 
-      await provider.request({
+        {
+          to: BASE_USDC_ADDRESS,
+          value: "0x0",
 
-        method: "wallet_sendCalls",
+          data: encodeFunctionData({
+            abi: erc20Abi,
+            functionName: "approve",
+            args: [
+              DONATION_CONTRACT,
+              amountScaled
+            ],
+          }),
+        },
 
-        params: [{
+        {
+          to: DONATION_CONTRACT,
+          value: "0x0",
 
-          version: "1.0",
+          data: encodeFunctionData({
+            abi: donationAbi,
+            functionName: "donate",
+            args: [amountScaled],
+          }),
+        }
 
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls: [
-
-            {
-              to: BASE_USDC_ADDRESS,
-              value: "0x0",
-              data: encodeFunctionData({
-                abi: erc20Abi,
-                functionName: "approve",
-                args: [
-                  DONATION_CONTRACT,
-                  amountScaled
-                ],
-              }),
-            },
-
-            {
-              to: DONATION_CONTRACT,
-              value: "0x0",
-              data: encodeFunctionData({
-                abi: donationAbi,
-                functionName: "donate",
-                args: [amountScaled],
-              }),
-            },
-
-          ],
-
-          capabilities: {
-
-            paymasterService: {
-              url: PAYMASTER_RPC,
-            },
-
-          },
-
-        }],
-
-      });
-
-      await new Promise(r => setTimeout(r, 1200));
+      );
 
     }
 
-    setStatus("100 dev transactions completed");
+
+    setStatus("Confirm once to send 100 transactions...");
+
+
+    await provider.request({
+
+      method: "wallet_sendCalls",
+
+      params: [{
+
+        version: "1.0",
+
+        chainId: BASE_CHAIN_HEX,
+
+        from: fromAddress,
+
+        calls,
+
+        capabilities: {
+
+          paymasterService: {
+
+            url: PAYMASTER_RPC,
+
+          },
+
+        },
+
+      }],
+
+    });
+
+
+    setStatus("100 transactions submitted 🚀");
 
   }
 
@@ -1417,6 +1432,7 @@ async function runDevTransactions() {
     setDevRunning(false);
 
   }
+
 }
 
 
