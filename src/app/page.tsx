@@ -46,6 +46,8 @@ const DONATION_CONTRACT =
   "0x8848c754269c7376959710002a9211ef353fba69" as const; // BaseDailyDonations
   const ACTIVITY_ENGINE_ADDRESS =
 "0xb8855CDC6890E71D94D9F1fC4984F86A54CC0C88";
+const NFT_BUY_CONTRACT =
+"0x3A7E487c6cA726d059B284910eD40236f949eB7b";
 
 function AvatarBubbleStream({ avatar }: { avatar: string }) {
   const [bubbles, setBubbles] = useState<
@@ -1918,9 +1920,105 @@ const ACTIVITY_ENGINE_ABI = [
     stateMutability: "nonpayable",
     inputs: [],
     outputs: []
-  }
+  },
+  {
+  name: "mintManyNFT",
+  type: "function",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "amount", type: "uint256" }],
+  outputs: []
+},
+
+{
+  name: "stakeNFT",
+  type: "function",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "tokenId", type: "uint256" }],
+  outputs: []
+},
+
+{
+  name: "stakeManyNFT",
+  type: "function",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "tokenIds", type: "uint256[]" }],
+  outputs: []
+},
+
+{
+  name: "unstakeNFT",
+  type: "function",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "tokenId", type: "uint256" }],
+  outputs: []
+},
+
+{
+  name: "unstakeAllNFT",
+  type: "function",
+  stateMutability: "nonpayable",
+  inputs: [],
+  outputs: []
+},
+
+{
+  name: "burnNFT",
+  type: "function",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "tokenId", type: "uint256" }],
+  outputs: []
+},
+
+{
+  name: "burnAllNFT",
+  type: "function",
+  stateMutability: "nonpayable",
+  inputs: [],
+  outputs: []
+}
 
 ] as const;
+
+const NFT_BUY_ABI = [
+
+{
+name: "mintMany",
+type: "function",
+stateMutability: "nonpayable",
+inputs: [
+{ name: "amount", type: "uint256" }
+],
+outputs: []
+},
+
+{
+name: "stakeMany",
+type: "function",
+stateMutability: "nonpayable",
+inputs: [
+{ name: "ids", type: "uint256[]" }
+],
+outputs: []
+},
+
+{
+name: "unstakeAll",
+type: "function",
+stateMutability: "nonpayable",
+inputs: [],
+outputs: []
+},
+
+{
+name: "burnAll",
+type: "function",
+stateMutability: "nonpayable",
+inputs: [],
+outputs: []
+}
+
+] as const;
+
 type ActivityFn =
   | "pingMany"
   | "multiCheckIn"
@@ -1929,7 +2027,32 @@ type ActivityFn =
   | "incrementCounter"
   | "stake100Units"
   | "stakeManyBatches"
-  | "unstakeAll";
+  | "unstakeAll"
+  | "pingMany"
+  | "multiCheckIn"
+  | "simulateUsage"
+  | "simulateFullSession"
+  | "incrementCounter"
+  | "stake100Units"
+  | "stakeManyBatches"
+  | "unstakeAll"
+  | "mintManyNFT"
+  | "stakeNFT"
+  | "stakeManyNFT"
+  | "unstakeNFT"
+  | "unstakeAllNFT"
+  | "burnNFT"
+  | "burnAllNFT";
+
+
+
+type NFTFn =
+| "mintMany"
+| "stakeMany"
+| "unstakeAll"
+| "burnAll";
+
+
 
 async function runActivityCall(
   functionName: ActivityFn,
@@ -2176,6 +2299,159 @@ async function runUnstakeAll() {
   );
 
 } 
+
+async function runNFTCall(
+fn: NFTFn,
+args: readonly unknown[] = []
+){
+
+try{
+
+if(!account){
+
+setStatus("Connect wallet");
+
+return;
+
+}
+
+setDevRunning(true);
+
+setStatus(`Running ${fn}...`);
+
+await ensureBaseNetwork();
+
+const sdk = getBaseAccountSDK();
+
+const provider = sdk.getProvider();
+
+const fromAddress =
+await getBaseAccountAddress();
+
+await provider.request({
+
+method: "wallet_sendCalls",
+
+params:[{
+
+version:"1.0",
+
+chainId: BASE_CHAIN_HEX,
+
+from: fromAddress,
+
+calls:[{
+
+to: NFT_BUY_CONTRACT,
+
+value:"0x0",
+
+data: encodeFunctionData({
+
+abi: NFT_BUY_ABI as any,
+
+functionName: fn,
+
+args
+
+})
+
+}],
+
+capabilities:{
+
+paymasterService:{
+
+url: PAYMASTER_RPC
+
+}
+
+}
+
+}]
+
+});
+
+setStatus(`${fn} done`);
+
+}
+
+catch(err:any){
+
+console.error(err);
+
+setStatus(
+err?.message ?? "NFT error"
+);
+
+}
+
+finally{
+
+setDevRunning(false);
+
+}
+
+}
+
+async function runMintNFT(
+amount:number
+){
+
+await runNFTCall(
+
+"mintMany",
+
+[BigInt(amount)]
+
+);
+
+}
+async function runStakeNFTs(
+count:number
+){
+
+const ids=[];
+
+for(let i=1;i<=count;i++){
+
+ids.push(BigInt(i));
+
+}
+
+await runNFTCall(
+
+"stakeMany",
+
+[ids]
+
+);
+
+}
+async function runUnstakeNFT(){
+
+await runNFTCall(
+
+"unstakeAll",
+
+[]
+
+);
+
+}
+async function runBurnNFT(){
+
+await runNFTCall(
+
+"burnAll",
+
+[]
+
+);
+
+}
+
+
 
   const unclaimedReadable =
     pendingTokens !== null ? formatToken(pendingTokens) : null;
@@ -3491,10 +3767,71 @@ unstake all
 
 </button>
 
-      
+      <hr className="border-white/10 my-1"/>
 
+<div className="text-[11px] text-slate-400 text-center">
+
+NFT actions
 
 </div>
+
+<button
+onClick={()=>runMintNFT(50)}
+className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
+>
+mint 50 nft
+</button>
+
+
+<button
+onClick={()=>runMintNFT(200)}
+className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
+>
+mint 200 nft
+</button>
+
+
+<button
+onClick={()=>runMintNFT(360)}
+className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
+>
+mint 360 nft
+</button>
+
+
+<button
+onClick={()=>runStakeNFTs(50)}
+className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
+>
+stake 50 nft
+</button>
+
+
+<button
+onClick={()=>runStakeNFTs(200)}
+className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
+>
+stake 200 nft
+</button>
+
+
+<button
+onClick={runUnstakeNFT}
+className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
+>
+unstake all nft
+</button>
+
+
+<button
+onClick={runBurnNFT}
+className="w-full px-3 py-2 rounded-xl bg-red-600 text-white text-xs font-semibold"
+>
+burn all nft
+</button>
+
+
+</div> 
       
 
     )}
