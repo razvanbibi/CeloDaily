@@ -96,9 +96,9 @@ export async function GET() {
 
         chunk,
 
-        "BaseDaily streak alert 🔥",
+        "🔥 BaseDaily is now Gasless",
 
-        "Check in today to keep your streak alive.",
+        "All tx fees are now sponsored by 0xtxn",
 
         "/"
 
