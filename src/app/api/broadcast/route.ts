@@ -94,15 +94,15 @@ export async function GET() {
 
       const result = await sendBaseNotification(
 
-        chunk,
+  chunk,
 
-        "🔥 BaseDaily streak alert",
+  "🔥 BaseDaily streak alert",
 
-        "Check in today to keep your streak alive! " + Date.now(),
+  "Check in today to keep your streak alive.",
 
-        "/"
+  "/"
 
-      );
+);
 
 
 
