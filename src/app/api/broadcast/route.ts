@@ -97,7 +97,7 @@ export async function GET() {
   chunk,
 
   "🔥 BaseDaily is now fully Gasless", 
-  "All tx fees are now sponsored by 0xtxn.",
+  "All tx fees are now sponsored by 0xtxn." + Date.now(),
 
   "/"
 
