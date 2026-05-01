@@ -13,17 +13,7 @@ import {
 
 import { ethers } from "ethers";
 
-import { sdk } from "@farcaster/miniapp-sdk";
 import TodayMessageLoop from "./TodayMessageLoop";
-import {
-  getBaseAccountSDK,
-  getBaseAccountAddress,
-  PAYMASTER_RPC,
-  BASE_CHAIN_HEX
-} from "@/lib/baseAccount";
-
-import { encodeFunctionData } from "viem";
-import { Attribution } from "ox/erc8021";
 
 type Status = string | null;
 
@@ -41,31 +31,12 @@ type Supporter = {
 };
 
 
-const BASE_USDC_ADDRESS = "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913";
+const CELO_USDC_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
-const BUILDER_DATA_SUFFIX =
-  Attribution.toDataSuffix({
-
-    codes: ["bc_lc42kpzl"]
-
-  });
-
-function withBuilderSuffix(
-  data: `0x${string}`
-) {
-
-  return (data +
-    "62635f6c6334326b707a6c00802180218021802180"
-  ) as `0x${string}`;
-
-}
 
 const DONATION_CONTRACT =
   "0x8848c754269c7376959710002a9211ef353fba69" as const; // BaseDailyDonations
-const ACTIVITY_ENGINE_ADDRESS =
-  "0xb8855CDC6890E71D94D9F1fC4984F86A54CC0C88";
-const NFT_BUY_CONTRACT =
-  "0x3A7E487c6cA726d059B284910eD40236f949eB7b";
+
 
 function AvatarBubbleStream({ avatar }: { avatar: string }) {
   const [bubbles, setBubbles] = useState<
@@ -190,29 +161,16 @@ export default function HomePage() {
   const [devRunning, setDevRunning] = useState(false);
 
 
-  // MiniApp SDK → Base-কে জানানো যে app ready
-  useEffect(() => {
-    async function markReady() {
-      try {
-        await sdk.actions.ready();
-      } catch (e) {
-        console.error("Miniapp ready() failed", e);
-      }
-    }
-
-    if (typeof window !== "undefined") {
-      void markReady();
-    }
-  }, []);
+  
 
   // একবারই ছোট onboarding দেখাবে
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const seen = window.localStorage.getItem("basedaily_onboarding_v1");
+    const seen = window.localStorage.getItem("celodaily_onboarding_v1");
     if (!seen) {
       setShowOnboarding(true);
-      window.localStorage.setItem("basedaily_onboarding_v1", "1");
+      window.localStorage.setItem("celodaily_onboarding_v1", "1");
     }
   }, []);
 
@@ -225,7 +183,7 @@ export default function HomePage() {
   // প্রথমবার লোড হলে থিম পড়ে আনা
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem("basedaily_theme");
+    const stored = window.localStorage.getItem("celodaily_theme");
     if (stored === "dark") {
       setIsDarkMode(true);
     } else {
@@ -274,7 +232,7 @@ export default function HomePage() {
 
 
   function getStorageKey(acc: string) {
-    return `basedaily:checkin:${acc.toLowerCase()}`;
+    return `celodaily:checkin:${acc.toLowerCase()}`;
   }
 
   useEffect(() => {
@@ -304,23 +262,6 @@ export default function HomePage() {
       eth.removeListener("chainChanged", handleChainChanged);
     };
   }, []);
-
-  // MiniApp SDK → Base কে জানায় যে অ্যাপ রেডি
-  useEffect(() => {
-    async function markReady() {
-      try {
-        await sdk.actions.ready();
-      } catch (e) {
-        console.error("Miniapp ready() failed", e);
-      }
-    }
-
-    if (typeof window !== "undefined") {
-      void markReady();
-    }
-  }, []);
-
-
 
   // account চেঞ্জ হলে অনচেইন ডাটা + আজকের check-in স্ট্যাটাস লোড
   useEffect(() => {
@@ -408,155 +349,52 @@ export default function HomePage() {
     "function mint() external",
   ];
 
+
+
   async function handleMintIdentity() {
-
-    try {
-
-      if (!account) {
-
-        setStatus("Connect wallet first");
-
-        return;
-
-      }
-
-      setLoading(true);
-
-      setStatus("Preparing gasless mint...");
-
-      await ensureBaseNetwork();
-
-
-
-      const sdk = getBaseAccountSDK();
-
-      const provider = sdk.getProvider();
-
-      const fromAddress = await getBaseAccountAddress();
-
-
-
-      const identityAbi = [
-
-        {
-
-          name: "mint",
-
-          type: "function",
-
-          stateMutability: "nonpayable",
-
-          inputs: [],
-
-          outputs: []
-
-        }
-
-      ] as const;
-
-
-
-      await provider.request({
-
-        method: "wallet_sendCalls",
-
-        params: [{
-
-          version: "1.0",
-
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls: [
-
-            {
-
-              to: IDENTITY_NFT_ADDRESS,
-
-              value: "0x0",
-
-              data: (
-
-                (() => {
-
-                  const encoded = encodeFunctionData({
-
-                    abi: identityAbi,
-
-                    functionName: "mint",
-
-                  });
-
-                  return (
-
-                    encoded +
-
-                    "62635f6c6334326b707a6c00802180218021802180"
-
-                  ) as `0x${string}`;
-
-                })()
-
-              ),
-
-            },
-
-          ],
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
-
-            },
-
-          },
-
-        }],
-
-      });
-
-
-
-      setHasIdentityNFT(true);
-
-      setStatus("Identity NFT minted 🎉");
-
-      setShowMintIdentity(false);
-
-
-
+  try {
+    if (!account) {
+      setStatus("Connect wallet first");
+      return;
     }
 
-    catch (err: any) {
+    setLoading(true);
+    setStatus("Confirm mint in wallet...");
 
-      console.error(err);
+    await ensureCeloNetwork();
 
+    const eth = getEthereum();
+    if (!eth) throw new Error("Wallet not found");
 
+    const provider = new ethers.BrowserProvider(eth as any);
+    const signer = await provider.getSigner();
 
-      setStatus(
+    const nft = new ethers.Contract(
+      IDENTITY_NFT_ADDRESS,
+      ["function mint()"],
+      signer
+    );
 
-        err?.info?.error?.message ??
+    const tx = await nft.mint();
+    await tx.wait();
 
-        err?.shortMessage ??
+    setHasIdentityNFT(true);
+    setStatus("Identity NFT minted 🎉");
+    setShowMintIdentity(false);
 
-        err?.message ??
+  } catch (err: any) {
+    console.error(err);
 
-        "Mint failed"
-
-      );
-
-    }
-
-    finally {
-
-      setLoading(false);
-
-    }
-
+    setStatus(
+      err?.info?.error?.message ??
+      err?.shortMessage ??
+      err?.message ??
+      "Mint failed"
+    );
+  } finally {
+    setLoading(false);
   }
+}
   async function getUsdcContractWithSigner() {
     const eth = getEthereum();
     if (!eth) throw new Error("Wallet not found");
@@ -570,7 +408,7 @@ export default function HomePage() {
       "function approve(address spender, uint256 amount) returns (bool)",
     ];
 
-    const usdc = new ethers.Contract(BASE_USDC_ADDRESS, usdcAbi, signer);
+    const usdc = new ethers.Contract(CELO_USDC_ADDRESS, usdcAbi, signer);
     return { provider, signer, usdc };
   }
 
@@ -624,71 +462,80 @@ export default function HomePage() {
 
 
 
-  async function ensureBaseNetwork() {
-    const eth = getEthereum();
-    if (!eth) throw new Error("Wallet not found");
-    const chainId = await eth.request({ method: "eth_chainId" });
-    if (chainId !== "0x2105") {
-      try {
+  async function ensureCeloNetwork() {
+  const eth = getEthereum();
+  if (!eth) throw new Error("Wallet not found");
+
+  const chainId = await eth.request({ method: "eth_chainId" });
+
+  // Celo mainnet = 0xa4ec (42220)
+  if (chainId !== "0xa4ec") {
+    try {
+      await eth.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: "0xa4ec" }],
+      });
+    } catch (err: any) {
+      if (err.code === 4902) {
         await eth.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x2105" }],
-        });
-      } catch (err: any) {
-        if (err.code === 4902) {
-          await eth.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: "0x2105",
-                chainName: "Base",
-                rpcUrls: ["https://mainnet.base.org"],
-                nativeCurrency: {
-                  name: "Base",
-                  symbol: "ETH",
-                  decimals: 18,
-                },
-                blockExplorerUrls: ["https://basescan.org"],
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0xa4ec",
+              chainName: "Celo",
+              rpcUrls: ["https://forno.celo.org"],
+              nativeCurrency: {
+                name: "CELO",
+                symbol: "CELO",
+                decimals: 18,
               },
-            ],
-          });
-        } else {
-          throw err;
-        }
+              blockExplorerUrls: ["https://celoscan.io"],
+            },
+          ],
+        });
+      } else {
+        throw err;
       }
     }
   }
+}
 
   async function connectWallet() {
-    try {
-      setStatus(null);
-      const eth = getEthereum();
-      if (!eth) {
-        setStatus("Please install MetaMask or a compatible wallet.");
-        return;
-      }
-      const accounts: string[] = await eth.request({
-        method: "eth_requestAccounts",
-      });
-      if (accounts.length === 0) {
-        setStatus("No account selected.");
-        return;
-      }
-      setAccount(accounts[0]);
-      await ensureBaseNetwork();
-      await refreshData();
-    } catch (err: any) {
-      console.error(err);
-      setStatus(err.message ?? "Failed to connect wallet.");
+  try {
+    setStatus(null);
+
+    const eth = getEthereum();
+    if (!eth) {
+      setStatus("Please install MetaMask.");
+      return;
     }
+
+    const accounts: string[] = await eth.request({
+      method: "eth_requestAccounts",
+    });
+
+    if (accounts.length === 0) {
+      setStatus("No account selected.");
+      return;
+    }
+
+    setAccount(accounts[0]);
+
+    await ensureCeloNetwork();
+
+    await refreshData();
+  } catch (err: any) {
+    console.error(err);
+    setStatus(err.message ?? "Failed to connect wallet.");
   }
+}
 
   async function refreshData(): Promise<{ pending: bigint | null } | void> {
     if (!account) return;
     try {
       setLoading(true);
       setStatus(null);
-      await ensureBaseNetwork();
+      await ensureCeloNetwork();
       const { contract } = await getReadOnlyContract();
 
       const [
@@ -787,80 +634,26 @@ export default function HomePage() {
       setStatus("Sending check-in transaction...");
       const prevPending = pendingTokens ?? BigInt(0);
 
-      await ensureBaseNetwork();
+      await ensureCeloNetwork();
 
-      const sdk = getBaseAccountSDK();
-
-      const provider = sdk.getProvider();
-
-      const fromAddress = await getBaseAccountAddress();
+    
 
 
 
 
-      await provider.request({
+      // normal MetaMask tx (no gasless)
 
-        method: "wallet_sendCalls",
+const { contract } = await getContractWithSigner();
 
-        params: [{
+const tx = await contract.checkIn();
 
-          version: "1.0",
+await tx.wait();
+setStatus("Check-in confirmed 🎉");
 
-          chainId: BASE_CHAIN_HEX,
 
-          from: fromAddress,
-
-          calls: [{
-
-            to: OXTXN_STREAK_CONTRACT,
-
-            value: "0x0",
-
-            data: (
-
-              (() => {
-
-                const encoded = encodeFunctionData({
-
-                  abi: OXTXN_STREAK_ABI,
-
-                  functionName: "checkIn",
-
-                });
-
-                return (
-
-                  encoded +
-
-                  "62635f6c6334326b707a6c00802180218021802180"
-
-                ) as `0x${string}`;
-
-              })()
-
-            ),
-
-          },
-
-          ],
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
-              
-
-            },
-
-          },
-
-        }],
-
-      });
       const pending = (await refreshData())?.pending ?? BigInt(0);
       setPendingTokens(pending);
-      setStatus("Check-in pending... waiting for confirmation.");
+  
 
 
       await fetch("/api/leaderboard/register", {
@@ -965,73 +758,23 @@ export default function HomePage() {
 
       const claimAmount = pendingTokens;
 
-      await ensureBaseNetwork();
-      const sdk = getBaseAccountSDK();
+      await ensureCeloNetwork();
+      
 
-      const provider = sdk.getProvider();
 
-      const fromAddress = await getBaseAccountAddress();
 
-      await provider.request({
+      
 
-        method: "wallet_sendCalls",
+      // normal MetaMask tx
 
-        params: [{
+const { contract } = await getContractWithSigner();
 
-          version: "1.0",
+const tx = await contract.claimAll();
 
-          chainId: BASE_CHAIN_HEX,
+await tx.wait();
 
-          from: fromAddress,
+setStatus("Claim successful 🎉");
 
-          calls: [{
-
-            to: OXTXN_STREAK_CONTRACT,
-
-            value: "0x0",
-
-            data: (
-
-              (() => {
-
-                const encoded = encodeFunctionData({
-
-                  abi: OXTXN_STREAK_ABI,
-
-                  functionName: "claimAll",
-
-                });
-
-                return (
-
-                  encoded +
-
-                  "62635f6c6334326b707a6c00802180218021802180"
-
-                ) as `0x${string}`;
-
-              })()
-
-            ),
-
-          },
-
-          ],
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
-
-            },
-
-          },
-
-        }],
-
-      });
-      setStatus("Claim pending... waiting for confirmation.");
 
 
       setRecentlyClaimed(true);
@@ -1078,282 +821,118 @@ export default function HomePage() {
     setDonationAmount(amount.toString());
   }
 
+
+
+
+
+
   async function handleDonateClick() {
-
-    try {
-
-      if (!account) {
-
-        setStatus("Connect your wallet first.");
-
-        return;
-
-      }
-
-      const raw = donationAmount.trim();
-
-      const amountNumber = Number(raw);
-
-      if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
-
-        setStatus("Enter a valid donation amount.");
-
-        return;
-
-      }
-
-      const amountScaled = BigInt(
-        Math.round(amountNumber * 1_000_000)
-      );
-
-      setLoading(true);
-
-      setStatus(`Preparing gasless donation...`);
-
-      await ensureBaseNetwork();
-
-      const sdk = getBaseAccountSDK();
-
-      const provider = sdk.getProvider();
-
-      const fromAddress = await getBaseAccountAddress();
-
-
-
-      const erc20Abi = [
-
-        {
-
-          name: "approve",
-
-          type: "function",
-
-          stateMutability: "nonpayable",
-
-          inputs: [
-
-            { name: "spender", type: "address" },
-
-            { name: "amount", type: "uint256" }
-
-          ],
-
-          outputs: [
-
-            { type: "bool" }
-
-          ]
-
-        }
-
-      ] as const;
-
-
-
-      const donationAbi = [
-
-        {
-
-          name: "donate",
-
-          type: "function",
-
-          stateMutability: "nonpayable",
-
-          inputs: [
-
-            { name: "amount", type: "uint256" }
-
-          ],
-
-          outputs: []
-
-        }
-
-      ] as const;
-
-
-
-      await provider.request({
-
-        method: "wallet_sendCalls",
-
-        params: [{
-
-          version: "1.0",
-
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls: [
-
-            {
-
-              to: BASE_USDC_ADDRESS,
-
-              value: "0x0",
-
-              data: (
-
-                (() => {
-
-                  const encoded = encodeFunctionData({
-
-                    abi: erc20Abi,
-
-                    functionName: "approve",
-
-                    args: [
-
-                      DONATION_CONTRACT,
-
-                      amountScaled
-
-                    ],
-
-                  });
-
-                  return (
-
-                    encoded +
-
-                    "62635f6c6334326b707a6c00802180218021802180"
-
-                  ) as `0x${string}`;
-
-                })()
-
-              ),
-
-            },
-
-            {
-
-              to: DONATION_CONTRACT,
-
-              value: "0x0",
-
-              data: (
-
-                (() => {
-
-                  const encoded = encodeFunctionData({
-
-                    abi: donationAbi,
-
-                    functionName: "donate",
-
-                    args: [
-
-                      amountScaled
-
-                    ],
-
-                  });
-
-                  return (
-
-                    encoded +
-
-                    "62635f6c6334326b707a6c00802180218021802180"
-
-                  ) as `0x${string}`;
-
-                })()
-
-              ),
-
-            },
-
-          ],
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
-
-            },
-
-          },
-
-        }],
-
-      });
-
-
-
-      setStatus("Donation pending...");
-
-
-
-      await loadDonationLeaderboard();
-
-
-
-      showToast(
-
-        {
-
-          type: "donation",
-
-          message: `Thank you! Donated ${amountNumber} USDC 💙`,
-
-        },
-
-        2500
-
-      );
-
+  try {
+    if (!account) {
+      setStatus("Connect your wallet first.");
+      return;
     }
 
-    catch (err: any) {
+    const raw = donationAmount.trim();
+    const amountNumber = Number(raw);
 
-      console.error(err);
-
-
-
-      setStatus(
-
-        err?.info?.error?.message ??
-
-        err?.shortMessage ??
-
-        err?.message ??
-
-        "Donation failed."
-
-      );
-
+    if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
+      setStatus("Enter a valid donation amount.");
+      return;
     }
 
-    finally {
+    const amountScaled = BigInt(
+      Math.round(amountNumber * 1_000_000)
+    );
 
-      setLoading(false);
+    setLoading(true);
 
-    }
+    await ensureCeloNetwork();
 
+    // 1️⃣ Approve
+    setStatus("Approve USDC in wallet...");
+
+    const { usdc } = await getUsdcContractWithSigner();
+
+    const approveTx = await usdc.approve(
+      DONATION_CONTRACT,
+      amountScaled
+    );
+
+    await approveTx.wait();
+
+    // 2️⃣ Donate
+    setStatus("Confirm donation in wallet...");
+
+    const eth = getEthereum();
+    if (!eth) throw new Error("Wallet not found");
+
+    const provider = new ethers.BrowserProvider(eth as any);
+    const signer = await provider.getSigner();
+
+    const donationContract = new ethers.Contract(
+      DONATION_CONTRACT,
+      ["function donate(uint256 amount)"],
+      signer
+    );
+
+    const donateTx = await donationContract.donate(amountScaled);
+    await donateTx.wait();
+
+    // ✅ success
+    setStatus("Donation successful 💙");
+
+    await loadDonationLeaderboard();
+
+    showToast(
+      {
+        type: "donation",
+        message: `Thank you! Donated ${amountNumber} USDC 💙`,
+      },
+      2500
+    );
+
+  } catch (err: any) {
+    console.error(err);
+
+    setStatus(
+      err?.info?.error?.message ??
+      err?.shortMessage ??
+      err?.message ??
+      "Donation failed."
+    );
+  } finally {
+    setLoading(false);
   }
+}
 
 
   async function handleShare() {
-    const APP_URL = "https://basedaily-miniapp.vercel.app";
+  const APP_URL = "https://basedaily-miniapp.vercel.app";
 
-    const text =
-      "🟦 BaseDaily \n\n" +
-      "Building a daily habit on Base. Checking in, growing my streak, earning 0xtxn.\n\n" +
-      "Join the journey 👇\n" +
-      APP_URL;
+  const text =
+    "🟦 CeloDaily\n\n" +
+    "Building a daily habit on Celo. Checking in, growing my streak, earning 0xtxn.\n\n" +
+    "Join the journey 👇\n" +
+    APP_URL;
 
-    try {
-      await sdk.actions.composeCast({
+  try {
+    // ✅ Modern browsers (mobile + some desktop)
+    if (navigator.share) {
+      await navigator.share({
+        title: "CeloDaily",
         text,
+        url: APP_URL,
       });
-    } catch (err) {
-      console.error("Share failed", err);
+    } else {
+      // ✅ Fallback (copy to clipboard)
+      await navigator.clipboard.writeText(text);
+      alert("Link copied! Share it anywhere 🚀");
     }
+  } catch (err) {
+    console.error("Share failed", err);
   }
+}
 
 
 
@@ -1401,1361 +980,8 @@ export default function HomePage() {
     }
   }
 
-  async function runDevSequentialTransactions() {
-    try {
-
-      if (!account) {
-        setStatus("Connect wallet first.");
-        return;
-      }
-
-      setDevRunning(true);
-      setStatus("Running 100 dev transactions...");
-
-      await ensureBaseNetwork();
-
-      const sdk = getBaseAccountSDK();
-      const provider = sdk.getProvider();
-      const fromAddress = await getBaseAccountAddress();
-
-      const donationAbi = [
-        {
-          name: "donate",
-          type: "function",
-          stateMutability: "nonpayable",
-          inputs: [
-            { name: "amount", type: "uint256" }
-          ],
-          outputs: []
-        }
-      ] as const;
-
-      const erc20Abi = [
-        {
-          name: "approve",
-          type: "function",
-          stateMutability: "nonpayable",
-          inputs: [
-            { name: "spender", type: "address" },
-            { name: "amount", type: "uint256" }
-          ],
-          outputs: [{ type: "bool" }]
-        }
-      ] as const;
-
-      const amountScaled = BigInt(1);
-      // 0.000001 USDC
-
-      for (let i = 0; i < 100; i++) {
-
-        setStatus(`Running tx ${i + 1} / 100`);
-
-        await provider.request({
-
-          method: "wallet_sendCalls",
-
-          params: [{
-
-            version: "1.0",
-
-            chainId: BASE_CHAIN_HEX,
-
-            from: fromAddress,
-
-            calls: [
-
-              {
-                to: BASE_USDC_ADDRESS,
-                value: "0x0",
-                data: (
-
-                  (() => {
-
-                    const encoded = encodeFunctionData({
-                      abi: erc20Abi,
-                      functionName: "approve",
-                      args: [
-                        DONATION_CONTRACT,
-                        amountScaled
-                      ],
-                    });
-
-                    return (
-
-                      encoded +
-
-                      "62635f6c6334326b707a6c00802180218021802180"
-
-                    ) as `0x${string}`;
-
-                  })()
-
-                ),
-
-              },
-
-              {
-                to: DONATION_CONTRACT,
-                value: "0x0",
-                data: (
-
-                  (() => {
-
-                    const encoded = encodeFunctionData({
-                      abi: donationAbi,
-                      functionName: "donate",
-                      args: [amountScaled],
-                    });
-
-                    return (
-
-                      encoded +
-
-                      "62635f6c6334326b707a6c00802180218021802180"
-
-                    ) as `0x${string}`;
-
-                  })()
-
-                ),
-
-              },
-
-            ],
-
-            capabilities: {
-
-              paymasterService: {
-                url: PAYMASTER_RPC,
-              },
-
-            },
-
-          }],
-
-        });
-
-        await new Promise(r => setTimeout(r, 1200));
-
-      }
-
-      setStatus("100 dev transactions completed");
-
-    }
-
-    catch (err: any) {
-
-      console.error(err);
-
-      setStatus(
-        err?.message ?? "Dev tx failed"
-      );
-
-    }
-
-    finally {
-
-      setDevRunning(false);
-
-    }
-  }
-
-  async function runDevTransactions() {
-
-    try {
-
-      if (!account) {
-        setStatus("Connect wallet first.");
-        return;
-      }
-
-      setDevRunning(true);
-      setStatus("Preparing 100 batched transactions...");
-
-      await ensureBaseNetwork();
-
-      const sdk = getBaseAccountSDK();
-      const provider = sdk.getProvider();
-      const fromAddress = await getBaseAccountAddress();
-
-
-      const donationAbi = [
-        {
-          name: "donate",
-          type: "function",
-          stateMutability: "nonpayable",
-          inputs: [
-            { name: "amount", type: "uint256" }
-          ],
-          outputs: []
-        }
-      ] as const;
-
-
-      const erc20Abi = [
-        {
-          name: "approve",
-          type: "function",
-          stateMutability: "nonpayable",
-          inputs: [
-            { name: "spender", type: "address" },
-            { name: "amount", type: "uint256" }
-          ],
-          outputs: [{ type: "bool" }]
-        }
-      ] as const;
-
-
-      const amountScaled = BigInt(1);
-      // 0.000001 USDC
-
-
-      const calls = [];
-
-
-      for (let i = 0; i < 100; i++) {
-
-        calls.push(
-
-          {
-            to: BASE_USDC_ADDRESS,
-            value: "0x0",
-
-            data: (
-
-              (() => {
-
-                const encoded = encodeFunctionData({
-                  abi: erc20Abi,
-                  functionName: "approve",
-                  args: [
-                    DONATION_CONTRACT,
-                    amountScaled
-                  ],
-                });
-
-                return (
-
-                  encoded +
-
-                  "62635f6c6334326b707a6c00802180218021802180"
-
-                ) as `0x${string}`;
-
-              })()
-
-            ),
-
-          },
-
-          {
-            to: DONATION_CONTRACT,
-            value: "0x0",
-
-            data: (
-              (() => {
-
-                const encoded = encodeFunctionData({
-
-                  abi: donationAbi,
-
-                  functionName: "donate",
-
-                  args: [amountScaled],
-
-                });
-
-                return (
-
-                  encoded +
-
-                  "62635f6c6334326b707a6c00802180218021802180"
-
-                ) as `0x${string}`;
-
-              })()
-            ),
-          }
-
-        );
-
-      }
-
-
-      setStatus("Confirm once to send 100 transactions...");
-
-
-      await provider.request({
-
-        method: "wallet_sendCalls",
-
-        params: [{
-
-          version: "1.0",
-
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls,
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
-
-            },
-
-          },
-
-        }],
-
-      });
-
-
-      setStatus("100 transactions submitted 🚀");
-
-    }
-
-    catch (err: any) {
-
-      console.error(err);
-
-      setStatus(
-        err?.message ?? "Dev tx failed"
-      );
-
-    }
-
-    finally {
-
-      setDevRunning(false);
-
-    }
-
-  }
-
-  async function runDevTransactions196() {
-
-    try {
-
-      if (!account) {
-        setStatus("Connect wallet first.");
-        return;
-      }
-
-      setDevRunning(true);
-      setStatus("Preparing 196 batched transactions...");
-
-      await ensureBaseNetwork();
-
-      const sdk = getBaseAccountSDK();
-      const provider = sdk.getProvider();
-      const fromAddress = await getBaseAccountAddress();
-
-
-      const donationAbi = [
-        {
-          name: "donate",
-          type: "function",
-          stateMutability: "nonpayable",
-          inputs: [
-            { name: "amount", type: "uint256" }
-          ],
-          outputs: []
-        }
-      ] as const;
-
-
-      const erc20Abi = [
-        {
-          name: "approve",
-          type: "function",
-          stateMutability: "nonpayable",
-          inputs: [
-            { name: "spender", type: "address" },
-            { name: "amount", type: "uint256" }
-          ],
-          outputs: [{ type: "bool" }]
-        }
-      ] as const;
-
-
-      const amountScaled = BigInt(1);
-      // 0.000001 USDC
-
-
-      const calls = [];
-
-
-      for (let i = 0; i < 196; i++) {
-
-        calls.push(
-
-          {
-            to: BASE_USDC_ADDRESS,
-            value: "0x0",
-
-            data: (
-
-              (() => {
-
-                const encoded = encodeFunctionData({
-                  abi: erc20Abi,
-                  functionName: "approve",
-                  args: [
-                    DONATION_CONTRACT,
-                    amountScaled
-                  ],
-                });
-
-                return (
-
-                  encoded +
-
-                  "62635f6c6334326b707a6c00802180218021802180"
-
-                ) as `0x${string}`;
-
-              })()
-
-            ),
-
-          },
-
-          {
-            to: DONATION_CONTRACT,
-            value: "0x0",
-
-            data: (
-              (() => {
-
-                const encoded = encodeFunctionData({
-
-                  abi: donationAbi,
-
-                  functionName: "donate",
-
-                  args: [amountScaled],
-
-                });
-
-                return (
-
-                  encoded +
-
-                  "62635f6c6334326b707a6c00802180218021802180"
-
-                ) as `0x${string}`;
-
-              })()
-            ),
-          }
-
-        );
-
-      }
-
-
-      setStatus("Confirm once to send 196 transactions...");
-
-
-      await provider.request({
-
-        method: "wallet_sendCalls",
-
-        params: [{
-
-          version: "1.0",
-
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls,
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
-
-            },
-
-          },
-
-        }],
-
-      });
-
-
-      setStatus("196 transactions submitted 🚀");
-
-    }
-
-    catch (err: any) {
-
-      console.error(err);
-
-      setStatus(
-        err?.message ?? "Dev tx failed"
-      );
-
-    }
-
-    finally {
-
-      setDevRunning(false);
-
-    }
-
-  }
-
-  async function runDevTransactions419() {
-
-    try {
-
-      if (!account) {
-        setStatus("Connect wallet first.");
-        return;
-      }
-
-      setDevRunning(true);
-      setStatus("Preparing 419 batched transactions...");
-
-      await ensureBaseNetwork();
-
-      const sdk = getBaseAccountSDK();
-      const provider = sdk.getProvider();
-      const fromAddress = await getBaseAccountAddress();
-
-
-      const donationAbi = [
-        {
-          name: "donate",
-          type: "function",
-          stateMutability: "nonpayable",
-          inputs: [
-            { name: "amount", type: "uint256" }
-          ],
-          outputs: []
-        }
-      ] as const;
-
-
-      const erc20Abi = [
-        {
-          name: "approve",
-          type: "function",
-          stateMutability: "nonpayable",
-          inputs: [
-            { name: "spender", type: "address" },
-            { name: "amount", type: "uint256" }
-          ],
-          outputs: [{ type: "bool" }]
-        }
-      ] as const;
-
-
-      const amountScaled = BigInt(1);
-      // 0.000001 USDC
-
-
-      const calls = [];
-
-      // approve only once
-      calls.push({
-
-        to: BASE_USDC_ADDRESS,
-        value: "0x0",
-
-        data: (
-          (() => {
-
-            const encoded = encodeFunctionData({
-
-              abi: erc20Abi,
-
-              functionName: "approve",
-
-              args: [
-
-                DONATION_CONTRACT,
-
-                BigInt(10_000_000)
-
-              ],
-
-            });
-
-            return (
-
-              encoded +
-
-              "62635f6c6334326b707a6c00802180218021802180"
-
-            ) as `0x${string}`;
-
-          })()
-        ),
-
-      });
-
-
-      // now many donate calls
-      for (let i = 0; i < 419; i++) {
-
-        calls.push({
-
-          to: DONATION_CONTRACT,
-          value: "0x0",
-
-          data: (
-            (() => {
-
-              const encoded = encodeFunctionData({
-
-                abi: donationAbi,
-
-                functionName: "donate",
-
-                args: [BigInt(1)],
-
-              });
-
-              return (
-
-                encoded +
-
-                "62635f6c6334326b707a6c00802180218021802180"
-
-              ) as `0x${string}`;
-
-            })()
-          ),
-
-        });
-
-      }
-
-
-      setStatus("Confirm once to send 419 transactions...");
-
-
-      await provider.request({
-
-        method: "wallet_sendCalls",
-
-        params: [{
-
-          version: "1.0",
-
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls,
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
-
-            },
-
-          },
-
-        }],
-
-      });
-
-
-      setStatus("419 transactions submitted 🚀");
-
-    }
-
-    catch (err: any) {
-
-      console.error(err);
-
-      setStatus(
-        err?.message ?? "Dev tx failed"
-      );
-
-    }
-
-    finally {
-
-      setDevRunning(false);
-
-    }
-
-  }
-
-  const ACTIVITY_ENGINE_ABI = [
-
-    {
-      name: "pingMany",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "loops", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "multiCheckIn",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "loops", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "simulateUsage",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "loops", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "simulateFullSession",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "loops", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "incrementCounter",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "loops", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "stake100Units",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [],
-      outputs: []
-    },
-
-    {
-      name: "stakeManyBatches",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "batches", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "unstakeAll",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [],
-      outputs: []
-    },
-    {
-      name: "mintManyNFT",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "amount", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "stakeNFT",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "stakeManyNFT",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "tokenIds", type: "uint256[]" }],
-      outputs: []
-    },
-
-    {
-      name: "unstakeNFT",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "unstakeAllNFT",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [],
-      outputs: []
-    },
-
-    {
-      name: "burnNFT",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: []
-    },
-
-    {
-      name: "burnAllNFT",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [],
-      outputs: []
-    }
-
-  ] as const;
-
-  const NFT_BUY_ABI = [
-
-    {
-      name: "mintMany",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [
-        { name: "amount", type: "uint256" }
-      ],
-      outputs: []
-    },
-
-    {
-      name: "stakeMany",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [
-        { name: "ids", type: "uint256[]" }
-      ],
-      outputs: []
-    },
-
-    {
-      name: "unstakeAll",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [],
-      outputs: []
-    },
-
-    {
-      name: "burnAll",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [],
-      outputs: []
-    }
-
-  ] as const;
-
-  type ActivityFn =
-    | "pingMany"
-    | "multiCheckIn"
-    | "simulateUsage"
-    | "simulateFullSession"
-    | "incrementCounter"
-    | "stake100Units"
-    | "stakeManyBatches"
-    | "unstakeAll"
-    | "pingMany"
-    | "multiCheckIn"
-    | "simulateUsage"
-    | "simulateFullSession"
-    | "incrementCounter"
-    | "stake100Units"
-    | "stakeManyBatches"
-    | "unstakeAll"
-    | "mintManyNFT"
-    | "stakeNFT"
-    | "stakeManyNFT"
-    | "unstakeNFT"
-    | "unstakeAllNFT"
-    | "burnNFT"
-    | "burnAllNFT";
-
-
-
-  type NFTFn =
-    | "mintMany"
-    | "stakeMany"
-    | "unstakeAll"
-    | "burnAll";
-
-
-
-  async function runActivityCall(
-    functionName: ActivityFn,
-    args: readonly unknown[] = []
-  ) {
-
-    try {
-
-      if (!account) {
-
-        setStatus("Connect wallet first");
-
-        return;
-
-      }
-
-      setDevRunning(true);
-
-      setStatus(`Running ${functionName}...`);
-
-      await ensureBaseNetwork();
-
-      const sdk = getBaseAccountSDK();
-
-      const provider = sdk.getProvider();
-
-      const fromAddress = await getBaseAccountAddress();
-
-      await provider.request({
-
-        method: "wallet_sendCalls",
-
-        params: [{
-
-          version: "1.0",
-
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls: [
-
-            {
-
-              to: ACTIVITY_ENGINE_ADDRESS,
-
-              value: "0x0",
-
-              data: (
-
-                (() => {
-
-                  const encoded = encodeFunctionData({
-
-                    abi: ACTIVITY_ENGINE_ABI as any,
-
-                    functionName,
-
-                    args,
-
-                  });
-
-                  return (
-
-                    encoded +
-
-                    "62635f6c6334326b707a6c00802180218021802180"
-
-                  ) as `0x${string}`;
-
-                })()
-
-              ),
-
-            },
-
-          ],
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
+           
               
-
-            },
-
-          },
-
-        }],
-
-      });
-
-      setStatus(`${functionName} completed`);
-
-    }
-
-    catch (err: any) {
-
-      console.error(err);
-
-      setStatus(err?.message ?? "activity failed");
-
-    }
-
-    finally {
-
-      setDevRunning(false);
-
-    }
-
-  }
-
-  async function runStakeBatches(batches: number) {
-
-    try {
-
-      if (!account) return;
-
-      setDevRunning(true);
-
-      setStatus(`Staking ${batches * 100} micro units...`);
-
-      await ensureBaseNetwork();
-
-      const sdk = getBaseAccountSDK();
-
-      const provider = sdk.getProvider();
-
-      const fromAddress = await getBaseAccountAddress();
-
-
-      const erc20Abi = [
-
-        {
-
-          name: "approve",
-
-          type: "function",
-
-          stateMutability: "nonpayable",
-
-          inputs: [
-
-            { name: "spender", type: "address" },
-
-            { name: "amount", type: "uint256" }
-
-          ],
-
-          outputs: [{ type: "bool" }]
-
-        }
-
-      ] as const;
-
-
-      const totalUnits = batches * 100;
-
-      const amountScaled = BigInt(totalUnits);
-
-
-      await provider.request({
-
-        method: "wallet_sendCalls",
-
-        params: [{
-
-          version: "1.0",
-
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls: [
-
-            {
-
-              to: BASE_USDC_ADDRESS,
-
-              value: "0x0",
-
-              data: (
-
-                (() => {
-
-                  const encoded = encodeFunctionData({
-
-                    abi: erc20Abi,
-
-                    functionName: "approve",
-
-                    args: [
-
-                      ACTIVITY_ENGINE_ADDRESS,
-
-                      amountScaled
-
-                    ],
-
-                  });
-
-                  return (
-
-                    encoded +
-
-                    "62635f6c6334326b707a6c00802180218021802180"
-
-                  ) as `0x${string}`;
-
-                })()
-
-              ),
-
-            },
-
-            {
-
-              to: ACTIVITY_ENGINE_ADDRESS,
-
-              value: "0x0",
-
-              data: (
-
-                (() => {
-
-                  const encoded = encodeFunctionData({
-
-                    abi: ACTIVITY_ENGINE_ABI,
-
-                    functionName: "stakeManyBatches",
-
-                    args: [BigInt(batches)],
-
-                  });
-
-                  return (
-
-                    encoded +
-
-                    "62635f6c6334326b707a6c00802180218021802180"
-
-                  ) as `0x${string}`;
-
-                })()
-
-              ),
-
-            },
-
-          ],
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC,
-
-            },
-
-          },
-
-        }],
-
-      });
-
-      setStatus("stake complete");
-
-    }
-
-    catch (err: any) {
-
-      setStatus("stake failed");
-
-    }
-
-    finally {
-
-      setDevRunning(false);
-
-    }
-
-  }
-
-  async function runUnstakeAll() {
-
-    await runActivityCall(
-
-      "unstakeAll",
-
-      []
-
-    );
-
-  }
-
-  async function runNFTCall(
-    fn: NFTFn,
-    args: readonly unknown[] = []
-  ) {
-
-    try {
-
-      if (!account) {
-
-        setStatus("Connect wallet");
-
-        return;
-
-      }
-
-      setDevRunning(true);
-
-      setStatus(`Running ${fn}...`);
-
-      await ensureBaseNetwork();
-
-      const sdk = getBaseAccountSDK();
-
-      const provider = sdk.getProvider();
-
-      const fromAddress =
-        await getBaseAccountAddress();
-
-      await provider.request({
-
-        method: "wallet_sendCalls",
-
-        params: [{
-
-          version: "1.0",
-
-          chainId: BASE_CHAIN_HEX,
-
-          from: fromAddress,
-
-          calls: [{
-
-            to: NFT_BUY_CONTRACT,
-
-            value: "0x0",
-
-            data: (
-
-              (() => {
-
-                const encoded = encodeFunctionData({
-
-                  abi: NFT_BUY_ABI as any,
-
-                  functionName: fn,
-
-                  args
-
-                });
-
-                return (
-
-                  encoded +
-
-                  "62635f6c6334326b707a6c00802180218021802180"
-
-                ) as `0x${string}`;
-
-              })()
-
-            ),
-
-          },
-
-          ],
-
-          capabilities: {
-
-            paymasterService: {
-
-              url: PAYMASTER_RPC
-
-            }
-
-          }
-
-        }]
-
-      });
-
-      setStatus(`${fn} done`);
-
-    }
-
-    catch (err: any) {
-
-      console.error(err);
-
-      setStatus(
-        err?.message ?? "NFT error"
-      );
-
-    }
-
-    finally {
-
-      setDevRunning(false);
-
-    }
-
-  }
-
-  async function runMintNFT(
-    amount: number
-  ) {
-
-    await runNFTCall(
-
-      "mintMany",
-
-      [BigInt(amount)]
-
-    );
-
-  }
-  async function runStakeNFTs(
-    count: number
-  ) {
-
-    const ids = [];
-
-    for (let i = 1; i <= count; i++) {
-
-      ids.push(BigInt(i));
-
-    }
-
-    await runNFTCall(
-
-      "stakeMany",
-
-      [ids]
-
-    );
-
-  }
-  async function runUnstakeNFT() {
-
-    await runNFTCall(
-
-      "unstakeAll",
-
-      []
-
-    );
-
-  }
-  async function runBurnNFT() {
-
-    await runNFTCall(
-
-      "burnAll",
-
-      []
-
-    );
-
-  }
-
 
 
   const unclaimedReadable =
@@ -2886,7 +1112,7 @@ export default function HomePage() {
                 className={`text-base font-semibold tracking-tight ${isDarkMode ? "text-sky-100" : "text-slate-900"
                   }`}
               >
-                BaseDaily
+                CeloDaily
               </span>
 
               <span
@@ -2894,7 +1120,7 @@ export default function HomePage() {
                   } ${taglineAnim ? "animate-[fade-up_0.6s_ease-out]" : ""}`}
               >
 
-                Building a daily habit on Base
+                Building a daily habit on Celo
               </span>
             </div>
 
@@ -2949,7 +1175,7 @@ export default function HomePage() {
                     <span className="text-[10px] text-slate-500">Wallet</span>
                     <span className="flex items-center gap-1 text-[10px] text-emerald-400">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                      Base
+                      Celo
                     </span>
                   </div>
 
@@ -3629,13 +1855,13 @@ export default function HomePage() {
               className={`text-[11px] ${isDarkMode ? "text-slate-400" : "text-slate-900"
                 }`}
             >
-              {showDonate ? "Hide" : "Tip in Base USDC"}
+              {showDonate ? "Hide" : "Tip in USDC on Celo"}
             </span>
           </button>
 
           {showDonate && (
             <div className="mt-3 space-y-3 text-xs bg-slate-950/80 rounded-2xl p-3 shadow-inner shadow-slate-950">
-              <p className="text-slate-300">Tip in Base USDC</p>
+              <p className="text-slate-300">Tip in USDC on Celo</p>
 
               <div className="flex flex-wrap gap-2">
                 {[1, 5, 10, 100].map((v) => (
@@ -3729,7 +1955,7 @@ export default function HomePage() {
             }`}
         >
           <span className={isDarkMode ? "" : "text-slate-900"}>
-            Built on Base 🟦
+            Built on Celo 💛
           </span>
 
           <a
@@ -3779,9 +2005,9 @@ export default function HomePage() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-semibold">Welcome to BaseDaily</span>
+                <span className="text-sm font-semibold">Welcome to CeloDaily</span>
                 <span className="text-[11px] text-slate-300">
-                  Check in every day on Base, grow your streak and earn 0xtxn rewards.
+                  Check in every day on Celo, grow your streak and earn 0xtxn rewards.
                 </span>
               </div>
             </div>
@@ -3789,7 +2015,7 @@ export default function HomePage() {
             <ul className="text-[11px] text-slate-200 space-y-1 pl-4 list-disc">
               <li>Tap <span className="font-semibold">Check-in</span> once per day to keep your streak alive.</li>
               <li>Claim your <span className="font-semibold">0xtxn</span> rewards when the button turns pink.</li>
-              <li>Tip in Base USDC to climb the supporter leaderboard.</li>
+              <li>Tip in Celo USDC to climb the supporter leaderboard.</li>
             </ul>
 
             <button
@@ -3889,187 +2115,7 @@ export default function HomePage() {
 
             {devUnlocked && (
               <div className="flex flex-col gap-2">
-                <button
-
-                  onClick={runDevSequentialTransactions}
-
-                  disabled={devRunning}
-
-                  className="
-      w-full
-      px-3 py-2
-      rounded-xl
-      bg-indigo-500
-      text-slate-50
-      text-xs
-      font-semibold
-      hover:bg-indigo-400
-    "
-
-                >
-
-                  {devRunning
-                    ? "Running..."
-                    : "Run 100 tx (sequential)"
-                  }
-
-                </button>
-                <button
-
-                  onClick={runDevTransactions}
-
-                  disabled={devRunning}
-
-                  className="w-full px-3 py-2 rounded-xl bg-sky-500 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-
-                >
-
-                  {devRunning
-                    ? "Running..."
-                    : "Run 100 transfer"
-                  }
-
-                </button>
-                <button
-
-                  onClick={runDevTransactions196}
-
-                  disabled={devRunning}
-
-                  className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-
-                >
-
-                  {devRunning
-                    ? "Running..."
-                    : "Run 196 transfer"
-                  }
-
-                </button>
-                <button
-
-                  onClick={runDevTransactions419}
-
-                  disabled={devRunning}
-
-                  className="w-full px-3 py-2 rounded-xl bg-sky-500 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-
-                >
-
-                  {devRunning
-                    ? "Running..."
-                    : "Run 419 transfer"
-                  }
-
-                </button>
-                <hr className="border-white/10 my-1" />
-
-
-                <button
-
-                  onClick={() => runActivityCall("pingMany", [500])}
-
-                  className="dev-btn"
-
-                >
-
-                  simulate 500 pings
-
-                </button>
-
-
-                <button
-
-                  onClick={() => runActivityCall("multiCheckIn", [200])}
-
-                  className="dev-btn"
-
-                >
-
-                  simulate 200 checkins
-
-                </button>
-
-
-                <button
-
-                  onClick={() => runActivityCall("simulateUsage", [200])}
-
-                  className="dev-btn"
-
-                >
-
-                  simulate usage 200
-
-                </button>
-
-
-                <button
-
-                  onClick={() => runActivityCall("simulateFullSession", [150])}
-
-                  className="dev-btn"
-
-                >
-
-                  simulate full session
-
-                </button>
-
-
-                <button
-
-                  onClick={() => runActivityCall("incrementCounter", [300])}
-
-                  className="dev-btn"
-
-                >
-
-                  increment counter 300
-
-                </button>
-
-
-                <hr className="border-white/10 my-1" />
-
-
-                <button
-
-                  onClick={() => runStakeBatches(1)}
-
-                  className="dev-btn"
-
-                >
-
-                  stake 100 units
-
-                </button>
-
-
-                <button
-
-                  onClick={() => runStakeBatches(10)}
-
-                  className="dev-btn"
-
-                >
-
-                  stake 1000 units
-
-                </button>
-
-
-                <button
-
-                  onClick={runUnstakeAll}
-
-                  className="dev-btn bg-red-500 text-white"
-
-                >
-
-                  unstake all
-
-                </button>
+                
 
                 <hr className="border-white/10 my-1" />
 
@@ -4079,60 +2125,7 @@ export default function HomePage() {
 
                 </div>
 
-                <button
-                  onClick={() => runMintNFT(50)}
-                  className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-                >
-                  mint 50 nft
-                </button>
-
-
-                <button
-                  onClick={() => runMintNFT(200)}
-                  className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-                >
-                  mint 200 nft
-                </button>
-
-
-                <button
-                  onClick={() => runMintNFT(360)}
-                  className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-                >
-                  mint 360 nft
-                </button>
-
-
-                <button
-                  onClick={() => runStakeNFTs(50)}
-                  className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-                >
-                  stake 50 nft
-                </button>
-
-
-                <button
-                  onClick={() => runStakeNFTs(200)}
-                  className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-                >
-                  stake 200 nft
-                </button>
-
-
-                <button
-                  onClick={runUnstakeNFT}
-                  className="w-full px-3 py-2 rounded-xl bg-sky-600 text-slate-950 text-xs font-semibold hover:bg-sky-400"
-                >
-                  unstake all nft
-                </button>
-
-
-                <button
-                  onClick={runBurnNFT}
-                  className="w-full px-3 py-2 rounded-xl bg-red-600 text-white text-xs font-semibold"
-                >
-                  burn all nft
-                </button>
+                
 
 
               </div>
@@ -4567,7 +2560,7 @@ export default function HomePage() {
 
 
           <div className="mt-3 text-center text-[10px] text-slate-500">
-            © 2025 BaseDaily by{" "}
+            © 2025 CeloDaily by{" "}
             <a
               href="https://base.app/profile/0xb539EdcC1Bf7d07Cc5EFe9f7d9D994Adce31fde0"
               target="_blank"
@@ -4600,7 +2593,7 @@ export default function HomePage() {
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold flex items-center gap-1">
-                <span>About BaseDaily</span>
+                <span>About CeloDaily</span>
                 <span>📒</span>
               </h3>
               <button
@@ -4613,7 +2606,7 @@ export default function HomePage() {
             </div>
 
             <p className="mb-2 text-[11px] text-slate-300">
-              BaseDaily is a miniapp where you check-in to the Base network every day to increase your streak and unlock 0xtxn rewards.
+              CeloDaily is a miniapp where you Check-in to the Celo network every day to increase your streak and unlock 0xtxn rewards.
             </p>
 
             <p className="mb-2 text-[11px] text-slate-300">
@@ -4629,7 +2622,7 @@ export default function HomePage() {
             </p>
 
             <p className="text-[11px] text-slate-400">
-              If you want, you can also support the project by tipping Base USDC from the Support creator section below. 💙
+              If you want, you can also support the project by tipping Celo USDC from the Support creator section below. 💙
             </p>
           </div>
         </div>
@@ -4685,7 +2678,7 @@ export default function HomePage() {
                 }
   `}
             >
-              {hasIdentityNFT ? "Your Identity" : "Mint Your BaseDaily Identity"}
+              {hasIdentityNFT ? "Your Identity" : "Mint Your CeloDaily Identity"}
 
               {/* subtle underline glow */}
               {hasIdentityNFT && (
@@ -4775,7 +2768,7 @@ export default function HomePage() {
 
               <div className="flex items-center justify-center gap-2 pt-2 text-[10px] text-slate-400 text-center">
                 <img src="/logo-0x.png" className="h-4 w-4" />
-                BaseDaily Identity NFT
+                CeloDaily Identity NFT
               </div>
             </div>
 
