@@ -35,7 +35,7 @@ const CELO_USDC_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
 
 const DONATION_CONTRACT =
-  "0x8848c754269c7376959710002a9211ef353fba69" as const; // CeloDailyDonations
+  "0x8848c754269c7376959710002a9211ef353fba69" as const; // BaseDailyDonations
 
 
 function AvatarBubbleStream({ avatar }: { avatar: string }) {
@@ -114,12 +114,8 @@ export default function HomePage() {
   const [showDonate, setShowDonate] = useState(false);
   const [donationAmount, setDonationAmount] = useState<string>("1");
 
-  // Farcaster / Neynar profile state
-  const [fcUsername, setFcUsername] = useState<string | null>(null);
-  const [fcDisplayName, setFcDisplayName] = useState<string | null>(null);
-  const [fcFid, setFcFid] = useState<string | null>(null);
-  const [fcScore, setFcScore] = useState<number | null>(null);
-  const [fcPfp, setFcPfp] = useState<string | null>(null);
+  const [profileName, setProfileName] = useState<string>("");
+const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
 
   const [ethReady, setEthReady] = useState(false);
 
@@ -414,21 +410,19 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!account) return;
-    if (!fcDisplayName && !fcPfp) return;
+    if (!profileName && !profileAvatar) return;
 
     fetch("/api/profile/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         address: account,
-        name: fcDisplayName,
-        avatar: fcPfp,
-        fid: fcFid,
-        neynarScore: fcScore,
+        name: profileName,
+        avatar: profileAvatar,
         highestStreak: highestStreak ? Number(highestStreak) : 0,
       }),
     });
-  }, [account, fcDisplayName, fcPfp, fcFid, fcScore, highestStreak]);
+  }, [account, profileName, profileAvatar,  highestStreak]);
 
 
 
@@ -460,7 +454,43 @@ export default function HomePage() {
     checkIdentityNFT();
   }, [account, ethReady]);
 
+useEffect(() => {
+  if (!account) return;
 
+  const saved = localStorage.getItem(`profile:${account}`);
+
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      setProfileName(parsed.name || "");
+      setProfileAvatar(parsed.avatar || "/avatar.png");
+    } catch {}
+  }
+}, [account]);
+
+function saveProfile(name: string, avatar: string) {
+  if (!account) return;
+
+  localStorage.setItem(
+    `profile:${account}`,
+    JSON.stringify({ name, avatar })
+  );
+
+  setProfileName(name);
+  setProfileAvatar(avatar);
+}
+
+function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const base64 = reader.result as string;
+    saveProfile(profileName, base64);
+  };
+  reader.readAsDataURL(file);
+}
 
   async function ensureCeloNetwork() {
   const eth = getEthereum();
@@ -602,13 +632,7 @@ export default function HomePage() {
       if (!res.ok) return;
       const data = await res.json();
 
-      setFcUsername(data.username ?? null);
-      setFcDisplayName(data.displayName ?? null);
-      setFcFid(data.fid ? String(data.fid) : null);
-      setFcScore(
-        typeof data.neynarScore === "number" ? data.neynarScore : null
-      );
-      setFcPfp(data.pfpUrl ?? null);
+      
     } catch {
       // fail silently for now
     }
@@ -1251,7 +1275,7 @@ setStatus("Claim successful 🎉");
                 >
                   {highestNumber}
                 </div>
-                <AvatarBubbleStream avatar={fcPfp || "/avatar.png"} />
+                <AvatarBubbleStream avatar={profileAvatar || "/avatar.png"} />
 
                 <div
                   className={`text-[11px] ${isDarkMode ? "text-slate-400" : "text-slate-900"
@@ -1742,7 +1766,7 @@ setStatus("Claim successful 🎉");
               }}
             >
               <img
-                src={fcPfp || "/avatar.png"}
+                src={profileAvatar || "/avatar.png"}
                 alt="User avatar"
                 className="h-full w-full object-cover"
               />
@@ -1770,7 +1794,7 @@ setStatus("Claim successful 🎉");
               {/* avatar bubble */}
               <div className="relative h-7 w-7 rounded-full overflow-hidden ring-2 ring-sky-400 bg-slate-900 z-10">
                 <img
-                  src={fcPfp || "/avatar.png"}
+                  src={profileAvatar || "/avatar.png"}
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -2202,20 +2226,41 @@ setStatus("Claim successful 🎉");
               ${isDarkMode ? "bg-slate-950/60 border-white/5" : "bg-white/80 border-sky-100/60"}`}
           >
             <div className="flex items-center gap-3">
-              <img
-                src={fcPfp || "/raihan-avatar.png"}
-                alt="User avatar"
-                className="h-15 w-15 rounded-full object-cover"
-              />
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold">
-                  {fcDisplayName || "Celo user"}
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  @{fcUsername || "handle"}
-                </span>
-              </div>
-            </div>
+  {/* Avatar */}
+  <img
+    src={profileAvatar || "/raihan-avatar.png"}
+    alt="User avatar"
+    className="h-15 w-15 rounded-full object-cover cursor-pointer"
+    onClick={() => document.getElementById("avatarUpload")?.click()}
+  />
+
+  {/* hidden file input (OUTSIDE layout) */}
+  <input
+    id="avatarUpload"
+    type="file"
+    accept="image/*"
+    onChange={handleAvatarUpload}
+    className="hidden"
+  />
+
+  {/* Name */}
+  <div className="flex flex-col">
+    <span
+      className="text-sm font-semibold cursor-pointer"
+      onClick={() => {
+        const name = prompt("Enter your name", profileName || "");
+        if (name !== null) saveProfile(name, profileAvatar);
+      }}
+    >
+      {profileName || "Celo user"}
+    </span>
+
+    {/* username REMOVE → blank বা small hint */}
+    <span className="text-[11px] text-slate-400">
+      Tap name to edit
+    </span>
+  </div>
+</div>
 
             {/* Theme toggle button */}
             <button
@@ -2272,7 +2317,7 @@ setStatus("Claim successful 🎉");
       ${isDarkMode ? "text-slate-100" : "text-slate-900 font-semibold"}
     `}
               >
-                {fcFid || "—"}
+              
               </span>
             </div>
 
@@ -2291,7 +2336,7 @@ setStatus("Claim successful 🎉");
     text-[14px]
   `}
               >
-                {fcScore !== null ? fcScore : "—"}
+               
               </span>
 
             </div>
@@ -2698,17 +2743,17 @@ setStatus("Claim successful 🎉");
 
               <div className="flex items-center gap-3">
                 <img
-                  src={fcPfp || "/avatar.png"}
+                  src={profileAvatar || "/avatar.png"}
                   className="h-12 w-12 rounded-full ring-2 ring-sky-400 animate-[breath_3.6s_ease-in-out_infinite]"
 
 
                 />
                 <div>
                   <p className="text-sm font-semibold text-slate-100">
-                    {fcDisplayName || "Celo user"}
+                    {profileName || "Celo user"}
                   </p>
                   <p className="text-[11px] text-slate-400">
-                    FID: {fcFid ?? "—"}
+                  
                   </p>
                 </div>
               </div>
@@ -2726,7 +2771,7 @@ setStatus("Claim successful 🎉");
 
                 <span className="text-[11px] uppercase tracking-wider text-slate-400">⭐ Neynar score</span>
                 <span className="text-right text-sm font-semibold text-sky-300">
-                  {fcScore ?? "—"}
+                  
                 </span>
               </div>
 
