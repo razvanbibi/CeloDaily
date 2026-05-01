@@ -35,7 +35,7 @@ const CELO_USDC_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
 
 const DONATION_CONTRACT =
-  "0x8848c754269c7376959710002a9211ef353fba69" as const; // BaseDailyDonations
+  "0x8848c754269c7376959710002a9211ef353fba69" as const; // CeloDailyDonations
 
 
 function AvatarBubbleStream({ avatar }: { avatar: string }) {
@@ -908,7 +908,7 @@ setStatus("Claim successful 🎉");
 
 
   async function handleShare() {
-  const APP_URL = "https://basedaily-miniapp.vercel.app";
+  const APP_URL = "https://celo-daily.vercel.app/";
 
   const text =
     "🟦 CeloDaily\n\n" +
@@ -2425,45 +2425,9 @@ setStatus("Claim successful 🎉");
             </p>
 
             <div className="flex items-center gap-3 text-[20px] text-slate-300">
-              <a
-                href="https://farcaster.xyz/0xtxn"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-sky-400"
-                title="Farcaster"
-              >
-                ⌗
-              </a>
-              <a
-                href="https://base.app/profile/0xb539EdcC1Bf7d07Cc5EFe9f7d9D994Adce31fde0"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-sky-400"
-                title="Base profile"
-              >
-                🟦
-              </a>
-              {/* Zora */}
-              <a
-                href="https://zora.co/@0xtxn"
-                target="_blank"
-                rel="noreferrer"
-                title="Zora"
-                className="
-    h-s w-6
-    rounded-full
-    overflow-hidden
-    flex items-center justify-center
-    hover:scale-105
-    transition-transform
-  "
-              >
-                <img
-                  src="/zora.jpg"
-                  alt="Zora"
-                  className="h-full w-full object-cover"
-                />
-              </a>
+              
+              
+            
 
               <a
                 href="https://x.com/Oxxtxn"
@@ -2610,7 +2574,7 @@ setStatus("Claim successful 🎉");
             </p>
 
             <p className="mb-2 text-[11px] text-slate-300">
-              Daily reward = base reward × your current streak. The more days of streak
+              Daily reward = celo reward × your current streak. The more days of streak
               , the more 0xtxn will be accumulated in the pending balance, which you can claim later with one click.
             </p>
 
