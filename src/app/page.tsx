@@ -1246,10 +1246,10 @@ setStatus("Claim successful 🎉");
 
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-100 flex items-center gap-2">
-              <BaseBlockLogo
-                checkedIn={hasCheckedInToday}
-                isDark={isDarkMode}
-              />
+              <CeloBlockLogo
+  checkedIn={hasCheckedInToday}
+  isDark={isDarkMode}
+/>
             </h2>
             {/* RIGHT: stats */}
             <div className="flex gap-6 text-center">
@@ -2930,7 +2930,7 @@ function BadgeGhost({ icon }: { icon: string }) {
   );
 }
 
-function BaseBlockLogo({
+function CeloBlockLogo({
   checkedIn,
   isDark,
 }: {
@@ -2939,25 +2939,25 @@ function BaseBlockLogo({
 }) {
   const color = isDark ? "bg-slate-400" : "bg-slate-900";
 
-
   return (
     <div className="flex items-center gap-[4px]">
-      {/* b */}
+      {/* c */}
       <div className="relative w-6 h-6">
         <div className={`${color} w-6 h-6 rounded-md`} />
-        <div
-          className={`${color} absolute -top-2 left-0 w-4 h-4 rounded-md`}
-        />
+        <div className={`${color} absolute top-0 left-0 w-4 h-4 rounded-md`} />
       </div>
-
-      {/* a */}
-      <div className={`${color} w-6 h-6 rounded-md`} />
-
-      {/* s */}
-      <div className={`${color} w-6 h-6 rounded-md`} />
 
       {/* e */}
       <div className={`${color} w-6 h-6 rounded-md`} />
+
+      {/* l */}
+      <div className={`${color} w-6 h-6 rounded-md`} />
+
+      {/* o */}
+      <div className="relative w-6 h-6">
+        <div className={`${color} w-6 h-6 rounded-md`} />
+        <div className="absolute inset-1 rounded bg-transparent border-2 border-current opacity-40" />
+      </div>
 
       {/* d (after check-in only) */}
       {checkedIn && (
