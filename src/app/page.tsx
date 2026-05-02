@@ -1323,14 +1323,18 @@ setStatus("Claim successful 🎉");
 
 
                           <div className="flex items-center gap-2">
-                            {u.avatar ? (
-                              <img src={u.avatar} className="h-5 w-5 rounded-full" />
-                            ) : (
-                              <div className="h-5 w-5 rounded-full bg-slate-700" />
-                            )}
-                            <span>
-                              #{i + 1} {u.name ? u.name : `${u.address.slice(0, 6)}…`}
-                            </span>
+  <img
+    src={
+      u.address.toLowerCase() === account?.toLowerCase()
+        ? profileAvatar || "/avatar.png"
+        : "/avatar.png"
+    }
+    className="h-5 w-5 rounded-full object-cover"
+  />
+
+  <span>
+    #{i + 1} {u.address.slice(0, 6)}…{u.address.slice(-4)}
+  </span>
 
                           </div>
                           <span
