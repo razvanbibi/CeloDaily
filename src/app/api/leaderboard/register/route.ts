@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { addAddress } from "@/lib/leaderboardStore";
-import { getNeynarProfile } from "@/lib/neynar";
+
 import { saveProfile } from "@/lib/profileStore";
 
 import { saveStats } from "@/lib/profileStore";
@@ -24,19 +24,7 @@ await saveStats(address, {
   highestStreak: hs,
 });
 
-  // 2️⃣ Neynar fetch (one-time best effort)
-  try {
-    const profile = await getNeynarProfile(address);
 
-    if (profile) {
-      await saveProfile(address, {
-        name: profile.display_name ?? null,
-        avatar: profile.pfp_url ?? null,
-      });
-    }
-  } catch {
-    // ignore Neynar failure
-  }
 
   return NextResponse.json({ ok: true });
 }

@@ -1,7 +1,7 @@
 import { Redis } from "@upstash/redis";
 
 const redis = Redis.fromEnv();
-const KEY_PREFIX = "basedaily:profile:";
+const KEY_PREFIX = "celodaily:profile:";
 
 export async function saveStats(
   address: string,

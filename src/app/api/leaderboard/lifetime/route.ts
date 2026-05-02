@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import { getAllAddresses } from "@/lib/leaderboardStore";
 import { getProfile } from "@/lib/profileStore";
 const HIDDEN_ADDRESSES = new Set([
-  "0x1fa406da31eea33752481c526a249c06279fd9a5",
   "0xb539edcc1bf7d07cc5efe9f7d9d994adce31fde0",
 ]);
 

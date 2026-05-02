@@ -191,7 +191,7 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
   // থিম পরিবর্তন হলে localStorage এ সেভ
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem("basedaily_theme"); if (stored === "light") { setIsDarkMode(false); } else { setIsDarkMode(true); }
+    const stored = window.localStorage.getItem("celodaily_theme"); if (stored === "light") { setIsDarkMode(false); } else { setIsDarkMode(true); }
   }, []); 
 
 
@@ -409,9 +409,9 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
   }
 
   useEffect(() => {
-    if (!account) return;
-    if (!profileName && !profileAvatar) return;
+  if (!account) return;
 
+  const timeout = setTimeout(() => {
     fetch("/api/profile/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -422,7 +422,10 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
         highestStreak: highestStreak ? Number(highestStreak) : 0,
       }),
     });
-  }, [account, profileName, profileAvatar,  highestStreak]);
+  }, 800); // debounce
+
+  return () => clearTimeout(timeout);
+}, [account, profileName, profileAvatar, highestStreak]);
 
 
 
