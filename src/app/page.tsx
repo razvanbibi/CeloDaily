@@ -2311,13 +2311,7 @@ setStatus("Claim successful 🎉");
           >
 
             <div className="flex justify-between">
-              <span
-                className={`
-      ${isDarkMode ? "" : "font-semibold"}
-    `}
-              >
-                FID
-              </span>
+              
               <span
                 className={`
       font-mono
@@ -2329,13 +2323,7 @@ setStatus("Claim successful 🎉");
             </div>
 
             <div className="flex justify-between">
-              <span
-                className={`
-      ${isDarkMode ? "" : "font-semibold"}
-    `}
-              >
-                Neynar score
-              </span>
+              
               <span
                 className={`
     ${isDarkMode ? "text-sky-300" : "text-sky-500"}
@@ -2576,7 +2564,7 @@ setStatus("Claim successful 🎉");
 
 
           <div className="mt-3 text-center text-[10px] text-slate-500">
-            © 2025 CeloDaily by{" "}
+            © 2026 CeloDaily by{" "}
             <a
               href="https://base.app/profile/0xb539EdcC1Bf7d07Cc5EFe9f7d9D994Adce31fde0"
               target="_blank"
@@ -2776,7 +2764,7 @@ setStatus("Claim successful 🎉");
                   {highestNumber}
                 </span>
 
-                <span className="text-[11px] uppercase tracking-wider text-slate-400">⭐ Neynar score</span>
+                
                 <span className="text-right text-sm font-semibold text-sky-300">
                   
                 </span>

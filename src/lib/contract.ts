@@ -178,9 +178,9 @@ export async function getReadOnlyContract() {
 
   const provider = new BrowserProvider(eth);
   const network = await provider.getNetwork();
-  if (network.chainId !== BigInt(8453)) {
-    throw new Error("Please switch network to Base mainnet");
-  }
+  if (network.chainId !== BigInt(42220)) {
+  throw new Error("Please switch network to Celo mainnet");
+}
 
   const contract = new Contract(
     OXTXN_STREAK_CONTRACT,
