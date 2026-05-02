@@ -17,4 +17,4 @@ export const OXTXN_STREAK_ABI = [
   // 👉 দরকারি read ABI গুলোই রাখো
 ] as const;
 export const OXTXN_STREAK_CONTRACT =
-  "0x9D028f81d30C366079882aBb7255Edba0d34Ea80" as const;
+  "0xd7fbd56e05f29184e235C991e680f1D57e1C7924" as const;

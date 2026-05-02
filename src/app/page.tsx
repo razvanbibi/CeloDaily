@@ -6,8 +6,6 @@ import {
   getContractWithSigner,
   getReadOnlyContract,
   formatToken,
-  OXTXN_STREAK_CONTRACT,
-  OXTXN_STREAK_ABI
 } from "@/lib/contract";
 
 
@@ -35,7 +33,7 @@ const CELO_USDC_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
 
 const DONATION_CONTRACT =
-  "0x8848c754269c7376959710002a9211ef353fba69" as const; // BaseDailyDonations
+  "0xbd738bF1BC70De72D2C23234C72c854EDE73568b" as const; // CeloDailyDonations
 
 
 function AvatarBubbleStream({ avatar }: { avatar: string }) {
@@ -145,7 +143,7 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
 
   const [showMintIdentity, setShowMintIdentity] = useState(false);
 
-  const IDENTITY_NFT_ADDRESS = "0xe56bF68c390f3761fa3707D8Dbb411bACBa0fa96";
+  const IDENTITY_NFT_ADDRESS = "0x934422770B2dA6d6CcA9CcaFf58523eC45491c43";
   const DEV_PASSWORD = "1245";
 
   const [hasIdentityNFT, setHasIdentityNFT] = useState<boolean | null>(null);
@@ -1110,7 +1108,7 @@ setStatus("Claim successful 🎉");
       }}
     >
       {!isDarkMode && (
-        <div className="basedaily-day-bg absolute inset-0 -z-10" />
+        <div className="celodaily-day-bg absolute inset-0 -z-10" />
       )}
 
 
@@ -1136,7 +1134,7 @@ setStatus("Claim successful 🎉");
             </div>
             <div className="flex flex-col leading-tight">
               <span
-                className={`text-base font-semibold tracking-tight ${isDarkMode ? "text-sky-100" : "text-slate-900"
+                className={`text-celo font-semibold tracking-tight ${isDarkMode ? "text-sky-100" : "text-slate-900"
                   }`}
               >
                 CeloDaily
@@ -1197,7 +1195,7 @@ setStatus("Claim successful 🎉");
             <div className="shrink-0">
               {account ? (
                 <div className="flex flex-col items-end gap-1 pr-2">
-                  {/* Wallet + Base */}
+                  {/* Wallet + celo */}
                   <div className="flex items-center gap-1.5">
                     <span className="text-[10px] text-slate-500">Wallet</span>
                     <span className="flex items-center gap-1 text-[10px] text-emerald-400">
@@ -1410,7 +1408,7 @@ setStatus("Claim successful 🎉");
                     className="
                       inline-flex items-center justify-center
                        px-8 py-3 rounded-full
-                        text-base font-semibold
+                        text-celo font-semibold
                          text-emerald-600
                          bg-emerald-500/10
                            border border-emerald-400/5
@@ -1434,7 +1432,7 @@ setStatus("Claim successful 🎉");
                   className={`
           inline-flex items-center justify-center
           px-8 py-3 rounded-full
-          text-base font-semibold
+          text-celo font-semibold
           transition
           shadow-lg shadow-emerald-900/70
           animate-[breathe_4.2s_ease-in-out_infinite]
@@ -1487,7 +1485,7 @@ setStatus("Claim successful 🎉");
                   <p className="font-semibold text-sky-300 mb-1">How rewards work</p>
                   <ul className="list-disc pl-4 space-y-1">
                     <li>Check-in once per day</li>
-                    <li>Each streak day increases reward(n*10)</li>
+                    <li>Each streak day increases reward(n*100)</li>
                     <li>Miss a day → streak resets</li>
                     <li>Rewards stack until you claim</li>
                   </ul>
@@ -1499,7 +1497,7 @@ setStatus("Claim successful 🎉");
             <HoverInfo title="How rewards work">
               <ul className="list-disc pl-4 space-y-1">
                 <li>Check-in once per day</li>
-                <li>Each streak day increases reward (n*10)</li>
+                <li>Each streak day increases reward (n*100)</li>
                 <li>Miss a day → streak resets</li>
                 <li>Rewards stack until you claim</li>
               </ul>
@@ -1642,7 +1640,7 @@ setStatus("Claim successful 🎉");
                 className={`
     inline-flex items-center justify-center
     px-8 py-3 rounded-full
-    text-base font-semibold
+    text-celo font-semibold
     transition
     shadow-lg
     ${rewardTier === "low"
@@ -2066,7 +2064,7 @@ setStatus("Claim successful 🎉");
           <div
             className="pointer-events-auto rounded-2xl bg-slate-950/95 border border-sky-400/60 px-4 py-2.5 text-xs text-sky-50 shadow-lg backdrop-blur-lg flex items-center gap-2 animate-[toast-pop_0.28s_ease-out]"
           >
-            <span className="text-base">
+            <span className="text-celo">
               {toast.type === "checkin" ? "⚡" : "💰"}
             </span>
             <div className="flex flex-col">
@@ -2205,7 +2203,7 @@ setStatus("Claim successful 🎉");
 
     ${isDarkMode
               ? "bg-sky-950/70 backdrop-blur-2xl border border-sky-500/10 shadow-2xl shadow-black/70"
-              : "basedaily-drawer-day border border-slate-200 shadow-xl"
+              : "celodaily-drawer-day border border-slate-200 shadow-xl"
             }
 
     ${drawerOpen ? "translate-x-0" : "translate-x-full"}
