@@ -27,7 +27,7 @@ type Supporter = {
   name?: string;
   avatar?: string;
 };
- 
+
 
 const CELO_USDC_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
@@ -153,7 +153,7 @@ export default function HomePage() {
   const [devPasswordInput, setDevPasswordInput] = useState("");
   const [devUnlocked, setDevUnlocked] = useState(false);
   const [devRunning, setDevRunning] = useState(false);
-
+  const [isMiniPay, setIsMiniPay] = useState(false);
 
 
 
@@ -196,6 +196,17 @@ export default function HomePage() {
   useEffect(() => {
     if (typeof window !== "undefined" && (window as any).ethereum) {
       setEthReady(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const eth = (window as any).ethereum;
+
+    if (eth?.isMiniPay) {
+      setIsMiniPay(true);
+      console.log("✅ MiniPay detected");
     }
   }, []);
 
@@ -497,6 +508,11 @@ export default function HomePage() {
     const eth = getEthereum();
     if (!eth) throw new Error("Wallet not found");
 
+    // 🔥 MiniPay skip
+  if ((window as any).ethereum?.isMiniPay) {
+    return;
+  }
+
     const chainId = await eth.request({ method: "eth_chainId" });
 
     // Celo mainnet = 0xa4ec (42220)
@@ -539,6 +555,10 @@ export default function HomePage() {
       if (!eth) {
         setStatus("Please install MetaMask.");
         return;
+      }
+
+      if ((window as any).ethereum?.isMiniPay) {
+        console.log("Connecting via MiniPay...");
       }
 
       const accounts: string[] = await eth.request({
@@ -1208,7 +1228,7 @@ export default function HomePage() {
                     <span className="text-[10px] text-slate-500">Wallet</span>
                     <span className="flex items-center gap-1 text-[10px] text-emerald-400">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                      Celo
+                      {isMiniPay ? "MiniPay" : "Celo"}
                     </span>
                   </div>
 
@@ -2317,7 +2337,7 @@ export default function HomePage() {
           >
 
             <div className="flex justify-between">
-              
+
               <span
                 className={`
       font-mono
@@ -2329,7 +2349,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex justify-between">
-              
+
               <span
                 className={`
     ${isDarkMode ? "text-sky-300" : "text-sky-500"}
@@ -2770,7 +2790,7 @@ export default function HomePage() {
                   {highestNumber}
                 </span>
 
-                
+
                 <span className="text-right text-sm font-semibold text-sky-300">
 
                 </span>
