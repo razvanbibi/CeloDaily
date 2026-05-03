@@ -2317,13 +2317,7 @@ export default function HomePage() {
           >
 
             <div className="flex justify-between">
-              <span
-                className={`
-      ${isDarkMode ? "" : "font-semibold"}
-    `}
-              >
-                FID
-              </span>
+              
               <span
                 className={`
       font-mono
@@ -2335,13 +2329,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex justify-between">
-              <span
-                className={`
-      ${isDarkMode ? "" : "font-semibold"}
-    `}
-              >
-                Neynar score
-              </span>
+              
               <span
                 className={`
     ${isDarkMode ? "text-sky-300" : "text-sky-500"}
@@ -2782,7 +2770,7 @@ export default function HomePage() {
                   {highestNumber}
                 </span>
 
-                <span className="text-[11px] uppercase tracking-wider text-slate-400">⭐ Neynar score</span>
+                
                 <span className="text-right text-sm font-semibold text-sky-300">
 
                 </span>
