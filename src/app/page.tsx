@@ -6,8 +6,6 @@ import {
   getContractWithSigner,
   getReadOnlyContract,
   formatToken,
-  OXTXN_STREAK_CONTRACT,
-  OXTXN_STREAK_ABI
 } from "@/lib/contract";
 
 
@@ -35,7 +33,7 @@ const CELO_USDC_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
 
 const DONATION_CONTRACT =
-  "0x8848c754269c7376959710002a9211ef353fba69" as const; // BaseDailyDonations
+  "0xbd738bF1BC70De72D2C23234C72c854EDE73568b" as const; // CeloDailyDonations
 
 
 function AvatarBubbleStream({ avatar }: { avatar: string }) {
@@ -115,7 +113,7 @@ export default function HomePage() {
   const [donationAmount, setDonationAmount] = useState<string>("1");
 
   const [profileName, setProfileName] = useState<string>("");
-const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
+  const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
 
   const [ethReady, setEthReady] = useState(false);
 
@@ -145,7 +143,7 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
 
   const [showMintIdentity, setShowMintIdentity] = useState(false);
 
-  const IDENTITY_NFT_ADDRESS = "0xe56bF68c390f3761fa3707D8Dbb411bACBa0fa96";
+  const IDENTITY_NFT_ADDRESS = "0x934422770B2dA6d6CcA9CcaFf58523eC45491c43";
   const DEV_PASSWORD = "1245";
 
   const [hasIdentityNFT, setHasIdentityNFT] = useState<boolean | null>(null);
@@ -157,7 +155,7 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
   const [devRunning, setDevRunning] = useState(false);
 
 
-  
+
 
   // একবারই ছোট onboarding দেখাবে
   useEffect(() => {
@@ -192,7 +190,7 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
   useEffect(() => {
     if (typeof window === "undefined") return;
     const stored = window.localStorage.getItem("celodaily_theme"); if (stored === "light") { setIsDarkMode(false); } else { setIsDarkMode(true); }
-  }, []); 
+  }, []);
 
 
   useEffect(() => {
@@ -348,49 +346,49 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
 
 
   async function handleMintIdentity() {
-  try {
-    if (!account) {
-      setStatus("Connect wallet first");
-      return;
+    try {
+      if (!account) {
+        setStatus("Connect wallet first");
+        return;
+      }
+
+      setLoading(true);
+      setStatus("Confirm mint in wallet...");
+
+      await ensureCeloNetwork();
+
+      const eth = getEthereum();
+      if (!eth) throw new Error("Wallet not found");
+
+      const provider = new ethers.BrowserProvider(eth as any);
+      const signer = await provider.getSigner();
+
+      const nft = new ethers.Contract(
+        IDENTITY_NFT_ADDRESS,
+        ["function mint()"],
+        signer
+      );
+
+      const tx = await nft.mint();
+      await tx.wait();
+
+      setHasIdentityNFT(true);
+      setStatus("Identity NFT minted 🎉");
+      setShowMintIdentity(false);
+
+    } catch (err: any) {
+      console.error(err);
+
+      setStatus(
+        err?.info?.error?.message ??
+        err?.shortMessage ??
+        err?.message ??
+        "Mint failed"
+      );
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(true);
-    setStatus("Confirm mint in wallet...");
-
-    await ensureCeloNetwork();
-
-    const eth = getEthereum();
-    if (!eth) throw new Error("Wallet not found");
-
-    const provider = new ethers.BrowserProvider(eth as any);
-    const signer = await provider.getSigner();
-
-    const nft = new ethers.Contract(
-      IDENTITY_NFT_ADDRESS,
-      ["function mint()"],
-      signer
-    );
-
-    const tx = await nft.mint();
-    await tx.wait();
-
-    setHasIdentityNFT(true);
-    setStatus("Identity NFT minted 🎉");
-    setShowMintIdentity(false);
-
-  } catch (err: any) {
-    console.error(err);
-
-    setStatus(
-      err?.info?.error?.message ??
-      err?.shortMessage ??
-      err?.message ??
-      "Mint failed"
-    );
-  } finally {
-    setLoading(false);
   }
-}
   async function getUsdcContractWithSigner() {
     const eth = getEthereum();
     if (!eth) throw new Error("Wallet not found");
@@ -409,23 +407,23 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
   }
 
   useEffect(() => {
-  if (!account) return;
+    if (!account) return;
 
-  const timeout = setTimeout(() => {
-    fetch("/api/profile/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        address: account,
-        name: profileName,
-        avatar: profileAvatar,
-        highestStreak: highestStreak ? Number(highestStreak) : 0,
-      }),
-    });
-  }, 800); // debounce
+    const timeout = setTimeout(() => {
+      fetch("/api/profile/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          address: account,
+          name: profileName,
+          avatar: profileAvatar,
+          highestStreak: highestStreak ? Number(highestStreak) : 0,
+        }),
+      });
+    }, 800); // debounce
 
-  return () => clearTimeout(timeout);
-}, [account, profileName, profileAvatar, highestStreak]);
+    return () => clearTimeout(timeout);
+  }, [account, profileName, profileAvatar, highestStreak]);
 
 
 
@@ -457,111 +455,111 @@ const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
     checkIdentityNFT();
   }, [account, ethReady]);
 
-useEffect(() => {
-  if (!account) return;
+  useEffect(() => {
+    if (!account) return;
 
-  const saved = localStorage.getItem(`profile:${account}`);
+    const saved = localStorage.getItem(`profile:${account}`);
 
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      setProfileName(parsed.name || "");
-      setProfileAvatar(parsed.avatar || "/avatar.png");
-    } catch {}
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setProfileName(parsed.name || "");
+        setProfileAvatar(parsed.avatar || "/avatar.png");
+      } catch { }
+    }
+  }, [account]);
+
+  function saveProfile(name: string, avatar: string) {
+    if (!account) return;
+
+    localStorage.setItem(
+      `profile:${account}`,
+      JSON.stringify({ name, avatar })
+    );
+
+    setProfileName(name);
+    setProfileAvatar(avatar);
   }
-}, [account]);
 
-function saveProfile(name: string, avatar: string) {
-  if (!account) return;
+  function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  localStorage.setItem(
-    `profile:${account}`,
-    JSON.stringify({ name, avatar })
-  );
-
-  setProfileName(name);
-  setProfileAvatar(avatar);
-}
-
-function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    const base64 = reader.result as string;
-    saveProfile(profileName, base64);
-  };
-  reader.readAsDataURL(file);
-}
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      saveProfile(profileName, base64);
+    };
+    reader.readAsDataURL(file);
+  }
 
   async function ensureCeloNetwork() {
-  const eth = getEthereum();
-  if (!eth) throw new Error("Wallet not found");
+    const eth = getEthereum();
+    if (!eth) throw new Error("Wallet not found");
 
-  const chainId = await eth.request({ method: "eth_chainId" });
+    const chainId = await eth.request({ method: "eth_chainId" });
 
-  // Celo mainnet = 0xa4ec (42220)
-  if (chainId !== "0xa4ec") {
-    try {
-      await eth.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0xa4ec" }],
-      });
-    } catch (err: any) {
-      if (err.code === 4902) {
+    // Celo mainnet = 0xa4ec (42220)
+    if (chainId !== "0xa4ec") {
+      try {
         await eth.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: "0xa4ec",
-              chainName: "Celo",
-              rpcUrls: ["https://forno.celo.org"],
-              nativeCurrency: {
-                name: "CELO",
-                symbol: "CELO",
-                decimals: 18,
-              },
-              blockExplorerUrls: ["https://celoscan.io"],
-            },
-          ],
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0xa4ec" }],
         });
-      } else {
-        throw err;
+      } catch (err: any) {
+        if (err.code === 4902) {
+          await eth.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: "0xa4ec",
+                chainName: "Celo",
+                rpcUrls: ["https://forno.celo.org"],
+                nativeCurrency: {
+                  name: "CELO",
+                  symbol: "CELO",
+                  decimals: 18,
+                },
+                blockExplorerUrls: ["https://celoscan.io"],
+              },
+            ],
+          });
+        } else {
+          throw err;
+        }
       }
     }
   }
-}
 
   async function connectWallet() {
-  try {
-    setStatus(null);
+    try {
+      setStatus(null);
 
-    const eth = getEthereum();
-    if (!eth) {
-      setStatus("Please install MetaMask.");
-      return;
+      const eth = getEthereum();
+      if (!eth) {
+        setStatus("Please install MetaMask.");
+        return;
+      }
+
+      const accounts: string[] = await eth.request({
+        method: "eth_requestAccounts",
+      });
+
+      if (accounts.length === 0) {
+        setStatus("No account selected.");
+        return;
+      }
+
+      setAccount(accounts[0]);
+
+      await ensureCeloNetwork();
+
+      await refreshData();
+    } catch (err: any) {
+      console.error(err);
+      setStatus(err.message ?? "Failed to connect wallet.");
     }
-
-    const accounts: string[] = await eth.request({
-      method: "eth_requestAccounts",
-    });
-
-    if (accounts.length === 0) {
-      setStatus("No account selected.");
-      return;
-    }
-
-    setAccount(accounts[0]);
-
-    await ensureCeloNetwork();
-
-    await refreshData();
-  } catch (err: any) {
-    console.error(err);
-    setStatus(err.message ?? "Failed to connect wallet.");
   }
-}
 
   async function refreshData(): Promise<{ pending: bigint | null } | void> {
     if (!account) return;
@@ -635,7 +633,7 @@ function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
       if (!res.ok) return;
       const data = await res.json();
 
-      
+
     } catch {
       // fail silently for now
     }
@@ -663,24 +661,24 @@ function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
 
       await ensureCeloNetwork();
 
-    
+
 
 
 
 
       // normal MetaMask tx (no gasless)
 
-const { contract } = await getContractWithSigner();
+      const { contract } = await getContractWithSigner();
 
-const tx = await contract.checkIn();
+      const tx = await contract.checkIn();
 
-await tx.wait();
-setStatus("Check-in confirmed 🎉");
+      await tx.wait();
+      setStatus("Check-in confirmed 🎉");
 
 
       const pending = (await refreshData())?.pending ?? BigInt(0);
       setPendingTokens(pending);
-  
+
 
 
       await fetch("/api/leaderboard/register", {
@@ -775,6 +773,7 @@ setStatus("Check-in confirmed 🎉");
         setStatus("Connect your wallet first.");
         return;
       }
+
       if (!pendingTokens || pendingTokens === BigInt(0)) {
         setStatus("Nothing to claim right now.");
         return;
@@ -786,23 +785,29 @@ setStatus("Check-in confirmed 🎉");
       const claimAmount = pendingTokens;
 
       await ensureCeloNetwork();
-      
 
+      const { contract } = await getContractWithSigner();
 
+      // 🔥 NEW LOGIC HERE
+      const hasBadges =
+        (pendingSilver ?? BigInt(0)) > BigInt(0) ||
+        (pendingGold ?? BigInt(0)) > BigInt(0) ||
+        (pendingDiamond ?? BigInt(0)) > BigInt(0) ||
+        (pendingLegendary ?? BigInt(0)) > BigInt(0);
 
-      
+      let tx;
 
-      // normal MetaMask tx
+      if (!hasBadges) {
+        // 👉 only tokens
+        tx = await contract.claimTokens();
+      } else {
+        // 👉 tokens + badges
+        tx = await contract.claimAll();
+      }
 
-const { contract } = await getContractWithSigner();
+      await tx.wait();
 
-const tx = await contract.claimAll();
-
-await tx.wait();
-
-setStatus("Claim successful 🎉");
-
-
+      setStatus("Claim successful 🎉");
 
       setRecentlyClaimed(true);
       await refreshData();
@@ -814,6 +819,7 @@ setStatus("Claim successful 🎉");
         },
         2500
       );
+
     } catch (err: any) {
       console.error(err);
       setStatus(
@@ -854,112 +860,112 @@ setStatus("Claim successful 🎉");
 
 
   async function handleDonateClick() {
-  try {
-    if (!account) {
-      setStatus("Connect your wallet first.");
-      return;
+    try {
+      if (!account) {
+        setStatus("Connect your wallet first.");
+        return;
+      }
+
+      const raw = donationAmount.trim();
+      const amountNumber = Number(raw);
+
+      if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
+        setStatus("Enter a valid donation amount.");
+        return;
+      }
+
+      const amountScaled = BigInt(
+        Math.round(amountNumber * 1_000_000)
+      );
+
+      setLoading(true);
+
+      await ensureCeloNetwork();
+
+      // 1️⃣ Approve
+      setStatus("Approve USDC in wallet...");
+
+      const { usdc } = await getUsdcContractWithSigner();
+
+      const approveTx = await usdc.approve(
+        DONATION_CONTRACT,
+        amountScaled
+      );
+
+      await approveTx.wait();
+
+      // 2️⃣ Donate
+      setStatus("Confirm donation in wallet...");
+
+      const eth = getEthereum();
+      if (!eth) throw new Error("Wallet not found");
+
+      const provider = new ethers.BrowserProvider(eth as any);
+      const signer = await provider.getSigner();
+
+      const donationContract = new ethers.Contract(
+        DONATION_CONTRACT,
+        ["function donate(uint256 amount)"],
+        signer
+      );
+
+      const donateTx = await donationContract.donate(amountScaled);
+      await donateTx.wait();
+
+      // ✅ success
+      setStatus("Donation successful 💙");
+
+      await loadDonationLeaderboard();
+
+      showToast(
+        {
+          type: "donation",
+          message: `Thank you! Donated ${amountNumber} USDC 💙`,
+        },
+        2500
+      );
+
+    } catch (err: any) {
+      console.error(err);
+
+      setStatus(
+        err?.info?.error?.message ??
+        err?.shortMessage ??
+        err?.message ??
+        "Donation failed."
+      );
+    } finally {
+      setLoading(false);
     }
-
-    const raw = donationAmount.trim();
-    const amountNumber = Number(raw);
-
-    if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
-      setStatus("Enter a valid donation amount.");
-      return;
-    }
-
-    const amountScaled = BigInt(
-      Math.round(amountNumber * 1_000_000)
-    );
-
-    setLoading(true);
-
-    await ensureCeloNetwork();
-
-    // 1️⃣ Approve
-    setStatus("Approve USDC in wallet...");
-
-    const { usdc } = await getUsdcContractWithSigner();
-
-    const approveTx = await usdc.approve(
-      DONATION_CONTRACT,
-      amountScaled
-    );
-
-    await approveTx.wait();
-
-    // 2️⃣ Donate
-    setStatus("Confirm donation in wallet...");
-
-    const eth = getEthereum();
-    if (!eth) throw new Error("Wallet not found");
-
-    const provider = new ethers.BrowserProvider(eth as any);
-    const signer = await provider.getSigner();
-
-    const donationContract = new ethers.Contract(
-      DONATION_CONTRACT,
-      ["function donate(uint256 amount)"],
-      signer
-    );
-
-    const donateTx = await donationContract.donate(amountScaled);
-    await donateTx.wait();
-
-    // ✅ success
-    setStatus("Donation successful 💙");
-
-    await loadDonationLeaderboard();
-
-    showToast(
-      {
-        type: "donation",
-        message: `Thank you! Donated ${amountNumber} USDC 💙`,
-      },
-      2500
-    );
-
-  } catch (err: any) {
-    console.error(err);
-
-    setStatus(
-      err?.info?.error?.message ??
-      err?.shortMessage ??
-      err?.message ??
-      "Donation failed."
-    );
-  } finally {
-    setLoading(false);
   }
-}
 
 
   async function handleShare() {
-  const APP_URL = "https://celo-daily.vercel.app/";
+    const APP_URL = "https://celo-daily.vercel.app/";
 
-  const text =
-    "🟦 CeloDaily\n\n" +
-    "Building a daily habit on Celo. Checking in, growing my streak, earning 0xtxn.\n\n" +
-    "Join the journey 👇\n" +
-    APP_URL;
+    const text =
+      "🟦 CeloDaily\n\n" +
+      "Building a daily habit on Celo. Checking in, growing my streak, earning 0xtxn.\n\n" +
+      "Join the journey 👇\n" +
+      APP_URL;
 
-  try {
-    // ✅ Modern browsers (mobile + some desktop)
-    if (navigator.share) {
-      await navigator.share({
-        title: "CeloDaily",
-        text,
-        url: APP_URL,
-      });
-    } else {
-      // ✅ Fallback (copy to clipboard)
-      await navigator.clipboard.writeText(text);
-      alert("Link copied! Share it anywhere 🚀");
+    try {
+      // ✅ Modern browsers (mobile + some desktop)
+      if (navigator.share) {
+        await navigator.share({
+          title: "CeloDaily",
+          text,
+          url: APP_URL,
+        });
+      } else {
+        // ✅ Fallback (copy to clipboard)
+        await navigator.clipboard.writeText(text);
+        alert("Link copied! Share it anywhere 🚀");
+      }
+    } catch (err) {
+      console.error("Share failed", err);
     }
-  } catch (err) {
-    console.error("Share failed", err);
   }
-}
 
 
 
@@ -1007,8 +1013,8 @@ setStatus("Claim successful 🎉");
     }
   }
 
-           
-              
+
+
 
 
   const unclaimedReadable =
@@ -1197,7 +1203,7 @@ setStatus("Claim successful 🎉");
             <div className="shrink-0">
               {account ? (
                 <div className="flex flex-col items-end gap-1 pr-2">
-                  {/* Wallet + Base */}
+                  {/* Wallet + Celo */}
                   <div className="flex items-center gap-1.5">
                     <span className="text-[10px] text-slate-500">Wallet</span>
                     <span className="flex items-center gap-1 text-[10px] text-emerald-400">
@@ -1247,9 +1253,9 @@ setStatus("Claim successful 🎉");
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-100 flex items-center gap-2">
               <CeloBlockLogo
-  checkedIn={hasCheckedInToday}
-  isDark={isDarkMode}
-/>
+                checkedIn={hasCheckedInToday}
+                isDark={isDarkMode}
+              />
             </h2>
             {/* RIGHT: stats */}
             <div className="flex gap-6 text-center">
@@ -1326,18 +1332,18 @@ setStatus("Claim successful 🎉");
 
 
                           <div className="flex items-center gap-2">
-  <img
-    src={
-      u.address.toLowerCase() === account?.toLowerCase()
-        ? profileAvatar || "/avatar.png"
-        : "/avatar.png"
-    }
-    className="h-5 w-5 rounded-full object-cover"
-  />
+                            <img
+                              src={
+                                u.address.toLowerCase() === account?.toLowerCase()
+                                  ? profileAvatar || "/avatar.png"
+                                  : "/avatar.png"
+                              }
+                              className="h-5 w-5 rounded-full object-cover"
+                            />
 
-  <span>
-    #{i + 1} {u.address.slice(0, 6)}…{u.address.slice(-4)}
-  </span>
+                            <span>
+                              #{i + 1} {u.address.slice(0, 6)}…{u.address.slice(-4)}
+                            </span>
 
                           </div>
                           <span
@@ -1487,7 +1493,7 @@ setStatus("Claim successful 🎉");
                   <p className="font-semibold text-sky-300 mb-1">How rewards work</p>
                   <ul className="list-disc pl-4 space-y-1">
                     <li>Check-in once per day</li>
-                    <li>Each streak day increases reward(n*10)</li>
+                    <li>Each streak day increases reward(n*100)</li>
                     <li>Miss a day → streak resets</li>
                     <li>Rewards stack until you claim</li>
                   </ul>
@@ -1499,7 +1505,7 @@ setStatus("Claim successful 🎉");
             <HoverInfo title="How rewards work">
               <ul className="list-disc pl-4 space-y-1">
                 <li>Check-in once per day</li>
-                <li>Each streak day increases reward (n*10)</li>
+                <li>Each streak day increases reward (n*100)</li>
                 <li>Miss a day → streak resets</li>
                 <li>Rewards stack until you claim</li>
               </ul>
@@ -1990,7 +1996,7 @@ setStatus("Claim successful 🎉");
           </span>
 
           <a
-            href="https://base.app/profile/0xb539EdcC1Bf7d07Cc5EFe9f7d9D994Adce31fde0"
+            href="https://celoscan.io/token/0xf3473730b41f0f5720bc8aa8fade0480062125ba"
             target="_blank"
             rel="noreferrer"
             className={`flex items-center gap-2 transition ${isDarkMode
@@ -2002,9 +2008,9 @@ setStatus("Claim successful 🎉");
 
             <span className="flex items-center gap-1">
               <img
-                src="https://res.cloudinary.com/coin-nft/image/fetch/q_90,w_40,fl_sanitize/f_auto/https%3A%2F%2Fmetadata.coinbase.com%2Ftoken_icons%2F277cf5807a056555246e412cb368fcdcae4db21d4a267d3128b3febd8899b419.png"
-                alt="0xtxn avatar"
-                className="h-5 w-5 rounded-full"
+                src="/celo-logo.jpg"
+                alt="0xtxn logo"
+                className="h-5 w-5 rounded-sm object-contain"
               />
               <span className="font-medium">0xtxn</span>
             </span>
@@ -2146,7 +2152,7 @@ setStatus("Claim successful 🎉");
 
             {devUnlocked && (
               <div className="flex flex-col gap-2">
-                
+
 
                 <hr className="border-white/10 my-1" />
 
@@ -2156,7 +2162,7 @@ setStatus("Claim successful 🎉");
 
                 </div>
 
-                
+
 
 
               </div>
@@ -2233,41 +2239,41 @@ setStatus("Claim successful 🎉");
               ${isDarkMode ? "bg-slate-950/60 border-white/5" : "bg-white/80 border-sky-100/60"}`}
           >
             <div className="flex items-center gap-3">
-  {/* Avatar */}
-  <img
-    src={profileAvatar || "/raihan-avatar.png"}
-    alt="User avatar"
-    className="h-15 w-15 rounded-full object-cover cursor-pointer"
-    onClick={() => document.getElementById("avatarUpload")?.click()}
-  />
+              {/* Avatar */}
+              <img
+                src={profileAvatar || "/raihan-avatar.png"}
+                alt="User avatar"
+                className="h-15 w-15 rounded-full object-cover cursor-pointer"
+                onClick={() => document.getElementById("avatarUpload")?.click()}
+              />
 
-  {/* hidden file input (OUTSIDE layout) */}
-  <input
-    id="avatarUpload"
-    type="file"
-    accept="image/*"
-    onChange={handleAvatarUpload}
-    className="hidden"
-  />
+              {/* hidden file input (OUTSIDE layout) */}
+              <input
+                id="avatarUpload"
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                className="hidden"
+              />
 
-  {/* Name */}
-  <div className="flex flex-col">
-    <span
-      className="text-sm font-semibold cursor-pointer"
-      onClick={() => {
-        const name = prompt("Enter your name", profileName || "");
-        if (name !== null) saveProfile(name, profileAvatar);
-      }}
-    >
-      {profileName || "Celo user"}
-    </span>
+              {/* Name */}
+              <div className="flex flex-col">
+                <span
+                  className="text-sm font-semibold cursor-pointer"
+                  onClick={() => {
+                    const name = prompt("Enter your name", profileName || "");
+                    if (name !== null) saveProfile(name, profileAvatar);
+                  }}
+                >
+                  {profileName || "Celo user"}
+                </span>
 
-    {/* username REMOVE → blank বা small hint */}
-    <span className="text-[11px] text-slate-400">
-      Tap name to edit
-    </span>
-  </div>
-</div>
+                {/* username REMOVE → blank বা small hint */}
+                <span className="text-[11px] text-slate-400">
+                  Tap name to edit
+                </span>
+              </div>
+            </div>
 
             {/* Theme toggle button */}
             <button
@@ -2324,7 +2330,7 @@ setStatus("Claim successful 🎉");
       ${isDarkMode ? "text-slate-100" : "text-slate-900 font-semibold"}
     `}
               >
-              
+
               </span>
             </div>
 
@@ -2343,7 +2349,7 @@ setStatus("Claim successful 🎉");
     text-[14px]
   `}
               >
-               
+
               </span>
 
             </div>
@@ -2477,9 +2483,9 @@ setStatus("Claim successful 🎉");
             </p>
 
             <div className="flex items-center gap-3 text-[20px] text-slate-300">
-              
-              
-            
+
+
+
 
               <a
                 href="https://x.com/Oxxtxn"
@@ -2576,9 +2582,9 @@ setStatus("Claim successful 🎉");
 
 
           <div className="mt-3 text-center text-[10px] text-slate-500">
-            © 2025 CeloDaily by{" "}
+            © 2026 CeloDaily by{" "}
             <a
-              href="https://base.app/profile/0xb539EdcC1Bf7d07Cc5EFe9f7d9D994Adce31fde0"
+              href="https://celoscan.io/token/0xf3473730b41f0f5720bc8aa8fade0480062125ba"
               target="_blank"
               rel="noreferrer"
               className="text-sky-500 hover:underline"
@@ -2760,7 +2766,7 @@ setStatus("Claim successful 🎉");
                     {profileName || "Celo user"}
                   </p>
                   <p className="text-[11px] text-slate-400">
-                  
+
                   </p>
                 </div>
               </div>
@@ -2778,7 +2784,7 @@ setStatus("Claim successful 🎉");
 
                 <span className="text-[11px] uppercase tracking-wider text-slate-400">⭐ Neynar score</span>
                 <span className="text-right text-sm font-semibold text-sky-300">
-                  
+
                 </span>
               </div>
 
@@ -2937,36 +2943,18 @@ function CeloBlockLogo({
   checkedIn: boolean;
   isDark: boolean;
 }) {
-  const color = isDark ? "bg-slate-400" : "bg-slate-900";
-
   return (
-    <div className="flex items-center gap-[4px]">
-      {/* c */}
-      <div className="relative w-6 h-6">
-        <div className={`${color} w-6 h-6 rounded-md`} />
-        <div className={`${color} absolute top-0 left-0 w-4 h-4 rounded-md`} />
-      </div>
+    <div className="flex items-center gap-1">
+      <img
+        src="/celo.png"
+        alt="Celo"
+        className="h-6 w-auto object-contain"
+      />
 
-      {/* e */}
-      <div className={`${color} w-6 h-6 rounded-md`} />
-
-      {/* l */}
-      <div className={`${color} w-6 h-6 rounded-md`} />
-
-      {/* o */}
-      <div className="relative w-6 h-6">
-        <div className={`${color} w-6 h-6 rounded-md`} />
-        <div className="absolute inset-1 rounded bg-transparent border-2 border-current opacity-40" />
-      </div>
-
-      {/* d (after check-in only) */}
       {checkedIn && (
-        <div className="relative w-6 h-6 animate-[fade-up_0.35s_ease-out]">
-          <div className={`${color} w-6 h-6 rounded-md`} />
-          <div
-            className={`${color} absolute -top-2 right-0 w-4 h-4 rounded-md`}
-          />
-        </div>
+        <span className="ml-1 text-xs text-emerald-400 animate-[fade-up_0.3s_ease-out]">
+          ✓
+        </span>
       )}
     </div>
   );

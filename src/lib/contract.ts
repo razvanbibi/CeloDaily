@@ -5,9 +5,9 @@ import { BrowserProvider, Contract, formatUnits } from "ethers";
 
 
 export const OXTXN_STREAK_CONTRACT =
-  "0x9D028f81d30C366079882aBb7255Edba0d34Ea80" as const;
+  "0xd7fbd56e05f29184e235C991e680f1D57e1C7924" as const;
 
-export const BASE_CHAIN_ID_HEX = "0x2105"; // 8453 dec
+export const CELO_CHAIN_ID_HEX = "0xa4ec"; // 42220
 
 // আমাদের দরকারি ফাংশনের মিনিমাল ABI
 export const OXTXN_STREAK_ABI = [
@@ -69,6 +69,13 @@ export const OXTXN_STREAK_ABI = [
     inputs: [],
     outputs: [],
   },
+  {
+  type: "function",
+  name: "claimTokens",
+  stateMutability: "nonpayable",
+  inputs: [],
+  outputs: [],
+},
 
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -178,9 +185,9 @@ export async function getReadOnlyContract() {
 
   const provider = new BrowserProvider(eth);
   const network = await provider.getNetwork();
-  if (network.chainId !== BigInt(8453)) {
-    throw new Error("Please switch network to Base mainnet");
-  }
+  if (network.chainId !== BigInt(42220)) {
+  throw new Error("Please switch network to Celo mainnet");
+}
 
   const contract = new Contract(
     OXTXN_STREAK_CONTRACT,
