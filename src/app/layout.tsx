@@ -9,12 +9,10 @@ export const metadata: Metadata = {
   other: {
    
     "talentapp:project_verification":
-  "bdfb38b8a5b69cf66debd1b89936871f2f24134c31c14156a7ab927fb79553414c9359602decc9d41fe12f4bc1ce4b181ec21c824cd3f00caaf8a70bf918d657",
+  "f875fa7a1ea67452fbabe71721d26b614545ac878afe43a4c515c2de15ebead92a186fdcb478cf471873bad34d52b244c1e836e3b0aed2159bc272e9c33054a0",
 
   },
 };
-
-
 
 export default function RootLayout({
   children,
