@@ -608,20 +608,6 @@ export default function HomePage() {
     }
   }
 
-
-  async function loadNeynarProfile(forAddress: string) {
-    try {
-      const res = await fetch(`/api/neynar-profile?address=${forAddress}`);
-      if (!res.ok) return;
-      const data = await res.json();
-
-
-    } catch {
-      // fail silently for now
-    }
-  }
-
-
   function showToast(next: Toast, durationMs = 2000) {
     setToast(next);
     if (next) {
@@ -2159,7 +2145,7 @@ export default function HomePage() {
       )}
 
 
-      {/* Profile drawer (animated + Neynar data) */}
+      {/* Profile drawer (animated */}
       <div
         className={`
           fixed inset-0 z-50 flex
@@ -2213,8 +2199,6 @@ export default function HomePage() {
               ✕
             </button>
           </div>
-
-          {/* Neynar profile + theme toggle */}
 
           <div
             className={`rounded-2xl px-3 py-2.5 flex items-center justify-between gap-3 border 
