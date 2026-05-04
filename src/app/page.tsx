@@ -121,8 +121,6 @@ export default function HomePage() {
 
   const [taglineAnim, setTaglineAnim] = useState(true);
 
-
-  // MiniApp onboarding overlay দেখা হয়েছে কিনা
   const [showOnboarding, setShowOnboarding] = useState(false);
   // Theme (day / night)
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -268,7 +266,6 @@ export default function HomePage() {
     };
   }, []);
 
-  // account চেঞ্জ হলে অনচেইন ডাটা + আজকের check-in স্ট্যাটাস লোড
   useEffect(() => {
 
     if (!account || !ethReady) return;
@@ -285,13 +282,7 @@ export default function HomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, ethReady]);
 
-  // Neynar profile – current connected wallet address দিয়ে
-  useEffect(() => {
-    if (!account) return;
-    void loadNeynarProfile(account);
-  }, [account]);
-
-
+  
   useEffect(() => {
     // initial animation already true
 
