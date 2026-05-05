@@ -2920,7 +2920,7 @@ function CeloBlockLogo({
       <img
         src={isDark ? "/celo-white.png" : "/celo.png"}
         alt="Celo"
-        className="h-6 w-auto object-contain"
+        className="h-6 w-auto object-contain transition-opacity duration-200"
       />
 
       {checkedIn && (
