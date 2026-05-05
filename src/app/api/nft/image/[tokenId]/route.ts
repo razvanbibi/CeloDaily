@@ -114,7 +114,6 @@ const logoBase64 = await fetchAsBase64(
   <text x="132" y="82"
     fill="#94a3b8"
     font-size="11">
-    FID: ${profile?.fid ?? "—"}
   </text>
 
   <!-- labels -->
@@ -144,11 +143,6 @@ const logoBase64 = await fetchAsBase64(
   font-size="15"
   font-weight="600"
   text-anchor="end">
-  ${
-    profile?.neynarScore !== null && profile?.neynarScore !== undefined
-      ? profile.neynarScore.toFixed(2)
-      : "—"
-  }
 </text>
 
 
