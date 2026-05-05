@@ -2918,7 +2918,7 @@ function CeloBlockLogo({
   return (
     <div className="flex items-center gap-1">
       <img
-        src="/celo.png"
+        src={isDark ? "/celo-white.png" : "/celo.png"}
         alt="Celo"
         className="h-6 w-auto object-contain"
       />
