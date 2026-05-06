@@ -1318,13 +1318,16 @@ export default function HomePage() {
                               src={
                                 u.address.toLowerCase() === account?.toLowerCase()
                                   ? profileAvatar || "/avatar.png"
-                                  : "/avatar.png"
+                                  : u.avatar || "/avatar.png"
                               }
                               className="h-5 w-5 rounded-full object-cover"
                             />
 
                             <span>
-                              #{i + 1} {u.address.slice(0, 6)}…{u.address.slice(-4)}
+                              #{i + 1}{" "}
+                              {u.name
+                                ? u.name
+                                : `${u.address.slice(0, 6)}…${u.address.slice(-4)}`}
                             </span>
 
                           </div>
