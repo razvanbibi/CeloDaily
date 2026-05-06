@@ -926,7 +926,7 @@ export default function HomePage() {
     const APP_URL = "https://celo-daily.vercel.app/";
 
     const text =
-      "🟦 CeloDaily\n\n" +
+      "CeloDaily\n\n" +
       "Building a daily habit on Celo. Checking in, growing my streak, earning 0xtxn.\n\n" +
       "Join the journey 👇";
 
@@ -995,10 +995,6 @@ export default function HomePage() {
     }
   }
 
-
-
-
-
   const unclaimedReadable =
     pendingTokens !== null ? formatToken(pendingTokens) : null;
 
@@ -1015,7 +1011,6 @@ export default function HomePage() {
     pendingGoldCount > 0 ||
     pendingDiamondCount > 0 ||
     pendingLegendaryCount > 0;
-
 
 
   const totalEarnedNumber = totalEarned ? Number(totalEarned) : 0;
@@ -1108,7 +1103,6 @@ export default function HomePage() {
           }`}
       />
 
-
       {/* content */}
       <div className="relative z-10 mx-auto max-w-md px-4 pb-10 pt-6 space-y-4">
         {/* Header */}
@@ -1168,7 +1162,6 @@ export default function HomePage() {
     ${isDarkMode ? glassCard : ""}
   `}
         >
-
 
           {/* top row */}
           <div className="flex items-start justify-between gap-3">
@@ -1230,7 +1223,6 @@ export default function HomePage() {
     ${isDarkMode ? glassCard : ""}
   `}
         >
-
 
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-100 flex items-center gap-2">
@@ -1384,7 +1376,6 @@ export default function HomePage() {
               }`}
           >
 
-
             {account
               ? hasCheckedInToday
                 ? "You've already checked in today. Come back tomorrow!"
@@ -1457,7 +1448,6 @@ export default function HomePage() {
   `}
         >
 
-
           <div className="relative group inline-flex">
             <div className="relative inline-flex">
               <button
@@ -1486,7 +1476,6 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-
 
             <HoverInfo title="How rewards work">
               <ul className="list-disc pl-4 space-y-1">
@@ -1670,7 +1659,6 @@ export default function HomePage() {
   `}
         >
 
-
           <div className="relative group inline-flex">
             <div className="relative inline-flex">
               <button
@@ -1699,7 +1687,6 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-
 
             <HoverInfo title="Badge milestones">
               <ul className="list-disc pl-4 space-y-1">
@@ -1749,7 +1736,6 @@ export default function HomePage() {
                 }}
               />
             </div>
-
 
             {/* badge icons – SKETCH BASED POSITIONS */}
             <div className="absolute inset-0 -top-3 text-lg">
@@ -1809,10 +1795,7 @@ export default function HomePage() {
               </div>
             </div>
 
-
-
           </div>
-
 
           <p
             className={`text-[11px] ${isDarkMode ? "text-slate-500" : "text-slate-900"
@@ -1864,7 +1847,6 @@ export default function HomePage() {
     ${isDarkMode ? glassCard : ""}
   `}
         >
-
 
           <button
             type="button"
@@ -2106,7 +2088,6 @@ export default function HomePage() {
 
             </div>
 
-
             {!devUnlocked && (
 
               <input
@@ -2139,7 +2120,6 @@ export default function HomePage() {
 
             )}
 
-
             {devUnlocked && (
               <div className="flex flex-col gap-2">
 
@@ -2152,11 +2132,7 @@ export default function HomePage() {
 
                 </div>
 
-
-
-
               </div>
-
 
             )}
 
@@ -2165,7 +2141,6 @@ export default function HomePage() {
         </div>
 
       )}
-
 
       {/* Profile drawer (animated */}
       <div
@@ -2188,7 +2163,6 @@ export default function HomePage() {
             setDrawerOpen(false);
             setShowBadgeInfo(false);
           }}
-
 
         />
 
@@ -2435,8 +2409,6 @@ export default function HomePage() {
             </div>
           </div>
 
-
-
           {/* Contact dev */}
           <div
             className={`
@@ -2460,9 +2432,6 @@ export default function HomePage() {
 
             <div className="flex items-center gap-3 text-[20px] text-slate-300">
 
-
-
-
               <a
                 href="https://x.com/Oxxtxn"
                 target="_blank"
@@ -2479,7 +2448,6 @@ export default function HomePage() {
               >
                 ✉️
               </a>
-
 
             </div>
           </div>
@@ -2556,7 +2524,6 @@ export default function HomePage() {
 
           </div>
 
-
           <div className="mt-3 text-center text-[10px] text-slate-500">
             © 2026 CeloDaily by{" "}
             <a
@@ -2569,7 +2536,6 @@ export default function HomePage() {
             </a>{" "}
             — All rights reserved.
           </div>
-
 
         </div>
 
@@ -2729,7 +2695,6 @@ export default function HomePage() {
   pointer-events-none
 " />
 
-
               <div className="flex items-center gap-3">
                 <img
                   src={profileAvatar || "/avatar.png"}
@@ -2868,7 +2833,6 @@ function BadgeCard({
   );
 }
 
-
 function BadgeGlow({
   icon,
   count,
@@ -2965,4 +2929,3 @@ function HoverInfo({
     </div>
   );
 }
-
