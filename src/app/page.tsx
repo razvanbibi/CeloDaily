@@ -923,16 +923,14 @@ export default function HomePage() {
 
 
   async function handleShare() {
-    const APP_URL = "celo-daily.vercel.app";
+    const APP_URL = "https://celo-daily.vercel.app/";
 
     const text =
       "🟦 CeloDaily\n\n" +
       "Building a daily habit on Celo. Checking in, growing my streak, earning 0xtxn.\n\n" +
-      "Join the journey 👇\n" +
-      APP_URL;
+      "Join the journey 👇";
 
     try {
-      // ✅ Modern browsers (mobile + some desktop)
       if (navigator.share) {
         await navigator.share({
           title: "CeloDaily",
@@ -940,8 +938,10 @@ export default function HomePage() {
           url: APP_URL,
         });
       } else {
-        // ✅ Fallback (copy to clipboard)
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(
+          text + "\n" + APP_URL
+        );
+
         alert("Link copied! Share it anywhere 🚀");
       }
     } catch (err) {
