@@ -788,9 +788,6 @@ export default function HomePage() {
       setStatus("Claim successful 🎉");
 
       setRecentlyClaimed(true);
-      // 🔥 FLASH EFFECT
-      setFlashGlow(true);
-      setTimeout(() => setFlashGlow(false), 1200);
       await refreshData();
 
       showToast(
