@@ -158,7 +158,48 @@ export const OXTXN_STREAK_ABI = [
 
 ] as const;
 
+export const OXTXN_TOKEN_ABI = [
+  {
+    type: "function",
+    name: "burn",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "amount", type: "uint256" }],
+    outputs: [],
+  },
 
+  {
+    type: "function",
+    name: "mint",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "to", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+
+  {
+    type: "function",
+    name: "claim",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "to", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+
+  {
+    type: "function",
+    name: "multiSend",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "recipients", type: "address[]" },
+      { name: "amounts", type: "uint256[]" },
+    ],
+    outputs: [],
+  },
+] as const;
 
 
 
