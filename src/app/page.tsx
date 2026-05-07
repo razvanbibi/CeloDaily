@@ -965,7 +965,28 @@ export default function HomePage() {
     }
   }
 
+async function handleDevMint() {
+  try {
+    setDevRunning(true);
 
+    const { contract } = await getTokenContractWithSigner();
+
+    const tx = await contract.mint(
+      devMintAddress,
+      ethers.parseUnits(devMintAmount, 18)
+    );
+
+    await tx.wait();
+
+    setStatus("Mint successful ✅");
+  } catch (err: any) {
+    console.error(err);
+
+    setStatus(err.message ?? "Mint failed");
+  } finally {
+    setDevRunning(false);
+  }
+}
 
 
   async function loadDonationLeaderboard() {
