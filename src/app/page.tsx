@@ -152,6 +152,21 @@ export default function HomePage() {
   const [devPasswordInput, setDevPasswordInput] = useState("");
   const [devUnlocked, setDevUnlocked] = useState(false);
   const [devRunning, setDevRunning] = useState(false);
+
+  const [devMintAddress, setDevMintAddress] = useState("");
+  const [devMintAmount, setDevMintAmount] = useState("");
+
+  const [devBurnAmount, setDevBurnAmount] = useState("");
+
+  const [devClaimAddress, setDevClaimAddress] = useState("");
+  const [devClaimAmount, setDevClaimAmount] = useState("");
+
+  const [devReverseToken, setDevReverseToken] = useState("");
+  const [devReverseAmount, setDevReverseAmount] = useState("");
+
+  const [devMultiAddresses, setDevMultiAddresses] = useState("");
+  const [devMultiAmounts, setDevMultiAmounts] = useState("");
+
   const [isMiniPay, setIsMiniPay] = useState(false);
 
 
