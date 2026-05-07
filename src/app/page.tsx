@@ -2208,7 +2208,7 @@ export default function HomePage() {
 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
 
-          <div className="w-[260px] rounded-2xl bg-slate-950 border border-sky-400/40 p-4 space-y-3">
+          <div className="w-[95vw] max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-950 border border-sky-400/40 p-6">
 
             <div className="flex justify-between items-center">
 
@@ -2264,7 +2264,7 @@ export default function HomePage() {
             {devUnlocked && (
               <div className="flex flex-col gap-2">
 
-                
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
 
                   {/* MINT */}
                   <div className="border border-white/10 rounded-xl p-4 space-y-3">
@@ -2392,7 +2392,7 @@ export default function HomePage() {
                     >
                       MultiSend
                     </button>
-                  
+                  </div>
 
                 </div>
 
