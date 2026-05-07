@@ -6,6 +6,8 @@ import { BrowserProvider, Contract, formatUnits } from "ethers";
 
 export const OXTXN_STREAK_CONTRACT =
   "0xd7fbd56e05f29184e235C991e680f1D57e1C7924" as const;
+export const OXTXN_TOKEN_CONTRACT =
+  "0xF3473730b41f0F5720bC8AA8fade0480062125bA" as const;
 
 export const CELO_CHAIN_ID_HEX = "0xa4ec"; // 42220
 
@@ -26,7 +28,7 @@ export const OXTXN_STREAK_ABI = [
     inputs: [{ name: "user", type: "address" }],
     outputs: [{ name: "", type: "uint256" }],
   },
-  { 
+  {
     type: "function",
     name: "highestStreak",
     stateMutability: "view",
@@ -70,12 +72,22 @@ export const OXTXN_STREAK_ABI = [
     outputs: [],
   },
   {
-  type: "function",
-  name: "claimTokens",
-  stateMutability: "nonpayable",
-  inputs: [],
-  outputs: [],
-},
+    type: "function",
+    name: "claimTokens",
+    stateMutability: "nonpayable",
+    inputs: [],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "reverse",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "token", type: "address" },
+      { name: "amount", type: "uint256" }
+    ],
+    outputs: [],
+  },
 
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -166,8 +178,8 @@ export async function getContractWithSigner() {
   const network = await provider.getNetwork();
 
   if (network.chainId !== BigInt(42220)) {
-  throw new Error("Please switch network to Celo mainnet");
-}
+    throw new Error("Please switch network to Celo mainnet");
+  }
 
   const contract = new Contract(
     OXTXN_STREAK_CONTRACT,
@@ -186,8 +198,8 @@ export async function getReadOnlyContract() {
   const provider = new BrowserProvider(eth);
   const network = await provider.getNetwork();
   if (network.chainId !== BigInt(42220)) {
-  throw new Error("Please switch network to Celo mainnet");
-}
+    throw new Error("Please switch network to Celo mainnet");
+  }
 
   const contract = new Contract(
     OXTXN_STREAK_CONTRACT,
