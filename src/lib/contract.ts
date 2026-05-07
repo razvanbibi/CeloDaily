@@ -231,6 +231,22 @@ export async function getContractWithSigner() {
   return { provider, signer, contract };
 }
 
+export async function getTokenContractWithSigner() {
+  const eth = getEthereum();
+  if (!eth) throw new Error("Wallet not found");
+
+  const provider = new BrowserProvider(eth);
+  const signer = await provider.getSigner();
+
+  const contract = new Contract(
+    OXTXN_TOKEN_CONTRACT,
+    OXTXN_TOKEN_ABI,
+    signer
+  );
+
+  return { provider, signer, contract };
+}
+
 // শুধু read করার জন্য (signer ছাড়াই)
 export async function getReadOnlyContract() {
   const eth = getEthereum();
