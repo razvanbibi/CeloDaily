@@ -2264,7 +2264,7 @@ export default function HomePage() {
             {devUnlocked && (
               <div className="flex flex-col gap-2">
 
-                <div className="mt-6 space-y-6">
+                
 
                   {/* MINT */}
                   <div className="border border-white/10 rounded-xl p-4 space-y-3">
@@ -2392,7 +2392,7 @@ export default function HomePage() {
                     >
                       MultiSend
                     </button>
-                  </div>
+                  
 
                 </div>
 
