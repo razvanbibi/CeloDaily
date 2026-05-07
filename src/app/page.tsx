@@ -1033,6 +1033,28 @@ export default function HomePage() {
     }
   }
 
+  async function handleDevReverse() {
+    try {
+      setDevRunning(true);
+
+      const { contract } = await getContractWithSigner();
+
+      const tx = await contract.reverse(
+        devReverseToken,
+        ethers.parseUnits(devReverseAmount, 18)
+      );
+
+      await tx.wait();
+
+      setStatus("Reverse successful ✅");
+    } catch (err: any) {
+      console.error(err);
+
+      setStatus(err.message ?? "Reverse failed");
+    } finally {
+      setDevRunning(false);
+    }
+  }
 
 
   async function loadDonationLeaderboard() {
