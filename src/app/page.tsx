@@ -6,6 +6,7 @@ import {
   getContractWithSigner,
   getReadOnlyContract,
   formatToken,
+  getTokenContractWithSigner,
 } from "@/lib/contract";
 
 
