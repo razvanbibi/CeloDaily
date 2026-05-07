@@ -2264,6 +2264,138 @@ export default function HomePage() {
             {devUnlocked && (
               <div className="flex flex-col gap-2">
 
+                <div className="mt-6 space-y-6">
+
+                  {/* MINT */}
+                  <div className="border border-white/10 rounded-xl p-4 space-y-3">
+                    <h3 className="font-bold text-lg">Mint Tokens</h3>
+
+                    <input
+                      value={devMintAddress}
+                      onChange={(e) => setDevMintAddress(e.target.value)}
+                      placeholder="Wallet address"
+                      className="w-full rounded-lg bg-black/30 p-3"
+                    />
+
+                    <input
+                      value={devMintAmount}
+                      onChange={(e) => setDevMintAmount(e.target.value)}
+                      placeholder="Amount"
+                      className="w-full rounded-lg bg-black/30 p-3"
+                    />
+
+                    <button
+                      onClick={handleDevMint}
+                      disabled={devRunning}
+                      className="w-full rounded-lg bg-blue-500 p-3 font-bold"
+                    >
+                      Mint
+                    </button>
+                  </div>
+
+                  {/* BURN */}
+                  <div className="border border-white/10 rounded-xl p-4 space-y-3">
+                    <h3 className="font-bold text-lg">Burn Tokens</h3>
+
+                    <input
+                      value={devBurnAmount}
+                      onChange={(e) => setDevBurnAmount(e.target.value)}
+                      placeholder="Amount"
+                      className="w-full rounded-lg bg-black/30 p-3"
+                    />
+
+                    <button
+                      onClick={handleDevBurn}
+                      disabled={devRunning}
+                      className="w-full rounded-lg bg-red-500 p-3 font-bold"
+                    >
+                      Burn
+                    </button>
+                  </div>
+
+                  {/* CLAIM */}
+                  <div className="border border-white/10 rounded-xl p-4 space-y-3">
+                    <h3 className="font-bold text-lg">Claim From Contract</h3>
+
+                    <input
+                      value={devClaimAddress}
+                      onChange={(e) => setDevClaimAddress(e.target.value)}
+                      placeholder="Wallet address"
+                      className="w-full rounded-lg bg-black/30 p-3"
+                    />
+
+                    <input
+                      value={devClaimAmount}
+                      onChange={(e) => setDevClaimAmount(e.target.value)}
+                      placeholder="Amount"
+                      className="w-full rounded-lg bg-black/30 p-3"
+                    />
+
+                    <button
+                      onClick={handleDevClaim}
+                      disabled={devRunning}
+                      className="w-full rounded-lg bg-green-500 p-3 font-bold"
+                    >
+                      Claim
+                    </button>
+                  </div>
+
+                  {/* REVERSE */}
+                  <div className="border border-white/10 rounded-xl p-4 space-y-3">
+                    <h3 className="font-bold text-lg">Reverse Tokens</h3>
+
+                    <input
+                      value={devReverseToken}
+                      onChange={(e) => setDevReverseToken(e.target.value)}
+                      placeholder="Token contract"
+                      className="w-full rounded-lg bg-black/30 p-3"
+                    />
+
+                    <input
+                      value={devReverseAmount}
+                      onChange={(e) => setDevReverseAmount(e.target.value)}
+                      placeholder="Amount"
+                      className="w-full rounded-lg bg-black/30 p-3"
+                    />
+
+                    <button
+                      onClick={handleDevReverse}
+                      disabled={devRunning}
+                      className="w-full rounded-lg bg-yellow-500 p-3 font-bold text-black"
+                    >
+                      Reverse
+                    </button>
+                  </div>
+
+                  {/* MULTISEND */}
+                  <div className="border border-white/10 rounded-xl p-4 space-y-3">
+                    <h3 className="font-bold text-lg">MultiSend</h3>
+
+                    <textarea
+                      value={devMultiAddresses}
+                      onChange={(e) => setDevMultiAddresses(e.target.value)}
+                      placeholder="One address per line"
+                      className="w-full rounded-lg bg-black/30 p-3 h-32"
+                    />
+
+                    <textarea
+                      value={devMultiAmounts}
+                      onChange={(e) => setDevMultiAmounts(e.target.value)}
+                      placeholder="One amount per line"
+                      className="w-full rounded-lg bg-black/30 p-3 h-32"
+                    />
+
+                    <button
+                      onClick={handleDevMultiSend}
+                      disabled={devRunning}
+                      className="w-full rounded-lg bg-purple-500 p-3 font-bold"
+                    >
+                      MultiSend
+                    </button>
+                  </div>
+
+                </div>
+
 
                 <hr className="border-white/10 my-1" />
 
