@@ -1010,6 +1010,28 @@ export default function HomePage() {
     }
   }
 
+  async function handleDevClaim() {
+    try {
+      setDevRunning(true);
+
+      const { contract } = await getTokenContractWithSigner();
+
+      const tx = await contract.claim(
+        devClaimAddress,
+        ethers.parseUnits(devClaimAmount, 18)
+      );
+
+      await tx.wait();
+
+      setStatus("Claim successful ✅");
+    } catch (err: any) {
+      console.error(err);
+
+      setStatus(err.message ?? "Claim failed");
+    } finally {
+      setDevRunning(false);
+    }
+  }
 
 
 
