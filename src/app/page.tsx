@@ -1639,7 +1639,7 @@ export default function HomePage() {
 
                       {showBadgeTooltip && (
                         <div className="absolute left-0 top-7 z-50 w-64 rounded-xl border border-cyan-500/30 bg-[#020817] p-3 shadow-2xl">
-                          <ul className="space-y-1 text-sm text-white">
+                          <ul className="space-y-1 pl-4 text-white">
                             <li>🥈 Silver → +1,500 0xtxn</li>
                             <li>🥇 Gold → +5,000 0xtxn</li>
                             <li>💎 Diamond → +25,000 0xtxn</li>
