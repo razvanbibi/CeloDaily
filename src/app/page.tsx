@@ -1160,7 +1160,8 @@ setPendingTokens(newPending);
     pendingLegendaryCount > 0;
 
 
-  const totalEarnedNumber = totalEarned ? Number(totalEarned) : 0;
+  const baseEarned =
+  totalEarned ? Number(formatToken(totalEarned)) : 0;
 
 const bonusEarned =
   (totalSilver ? Number(totalSilver) * 1500 : 0) +
@@ -1169,7 +1170,7 @@ const bonusEarned =
   (totalLegendary ? Number(totalLegendary) * 500000 : 0);
 
 const correctedTotalEarned =
-  totalEarnedNumber + bonusEarned;
+  baseEarned + bonusEarned;
 
 const totalEarnedReadable =
   correctedTotalEarned.toLocaleString();
