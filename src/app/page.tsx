@@ -671,9 +671,12 @@ export default function HomePage() {
       setStatus("Check-in confirmed 🎉");
 
 
-      const pending = (await refreshData())?.pending ?? BigInt(0);
-      setPendingTokens(pending);
-      await refreshData();
+      const result = await refreshData();
+
+const newPending =
+  result?.pending ?? pendingTokens ?? BigInt(0);
+
+setPendingTokens(newPending);
 
 
 
@@ -692,12 +695,12 @@ export default function HomePage() {
       }
       setHasCheckedInToday(true);
 
-      const result = await refreshData();
+      
 
       await new Promise((r) => setTimeout(r, 300));
 
 
-      const newPending = result?.pending ?? pendingTokens ?? BigInt(0);
+      
       const diff = newPending - prevPending;
       if (diff > BigInt(0)) {
         showToast(
