@@ -674,10 +674,10 @@ export default function HomePage() {
 
       const result = await refreshData();
 
-const newPending =
-  result?.pending ?? pendingTokens ?? BigInt(0);
+      const newPending =
+        result?.pending ?? pendingTokens ?? BigInt(0);
 
-setPendingTokens(newPending);
+      setPendingTokens(newPending);
 
 
 
@@ -696,12 +696,12 @@ setPendingTokens(newPending);
       }
       setHasCheckedInToday(true);
 
-      
+
 
       await new Promise((r) => setTimeout(r, 300));
 
 
-      
+
       const diff = newPending - prevPending;
       if (diff > BigInt(0)) {
         showToast(
@@ -1162,19 +1162,19 @@ setPendingTokens(newPending);
 
 
   const baseEarned =
-  totalEarned ? Number(formatToken(totalEarned)) : 0;
+    totalEarned ? Number(formatToken(totalEarned)) : 0;
 
-const bonusEarned =
-  (totalSilver ? Number(totalSilver) * 1500 : 0) +
-  (totalGold ? Number(totalGold) * 5000 : 0) +
-  (totalDiamond ? Number(totalDiamond) * 25000 : 0) +
-  (totalLegendary ? Number(totalLegendary) * 500000 : 0);
+  const bonusEarned =
+    (totalSilver ? Number(totalSilver) * 1500 : 0) +
+    (totalGold ? Number(totalGold) * 5000 : 0) +
+    (totalDiamond ? Number(totalDiamond) * 25000 : 0) +
+    (totalLegendary ? Number(totalLegendary) * 500000 : 0);
 
-const correctedTotalEarned =
-  baseEarned + bonusEarned;
+  const correctedTotalEarned =
+    baseEarned + bonusEarned;
 
-const totalEarnedReadable =
-  correctedTotalEarned.toLocaleString();
+  const totalEarnedReadable =
+    correctedTotalEarned.toLocaleString();
 
   const totalSilverCount = totalSilver ? Number(totalSilver) : 0;
   const totalGoldCount = totalGold ? Number(totalGold) : 0;
@@ -1626,10 +1626,31 @@ const totalEarnedReadable =
                     border border-white/10 shadow-2xl
                     px-3 py-2 text-[11px] text-slate-200">
                   <p className="font-semibold text-sky-300 mb-1">How rewards work</p>
-                  <ul className="list-disc pl-4 space-y-1">
+                  <ul className="list-disc pl-4 space-y-1 relative">
                     <li>Check-in once per day</li>
-                    <li>Each streak day increases reward(n*100)</li>
+
+                    <li>Each streak day increases reward (n×100)</li>
+
+                    <li
+                      className="relative cursor-pointer text-cyan-300"
+                      onClick={() => setShowBadgeTooltip(!showBadgeTooltip)}
+                    >
+                      Badge milestones unlock bonus rewards
+
+                      {showBadgeTooltip && (
+                        <div className="absolute left-0 top-7 z-50 w-64 rounded-xl border border-cyan-500/30 bg-[#020817] p-3 shadow-2xl">
+                          <ul className="space-y-1 text-sm text-white">
+                            <li>🥈 Silver → +1,500 0xtxn</li>
+                            <li>🥇 Gold → +5,000 0xtxn</li>
+                            <li>💎 Diamond → +25,000 0xtxn</li>
+                            <li>🌟 Legendary → +500,000 0xtxn</li>
+                          </ul>
+                        </div>
+                      )}
+                    </li>
+
                     <li>Miss a day → streak resets</li>
+
                     <li>Rewards stack until you claim</li>
                   </ul>
                 </div>
