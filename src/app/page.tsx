@@ -1161,8 +1161,18 @@ setPendingTokens(newPending);
 
 
   const totalEarnedNumber = totalEarned ? Number(totalEarned) : 0;
-  const totalEarnedReadable =
-    totalEarned !== null ? formatToken(totalEarned) : null;
+
+const bonusEarned =
+  (totalSilver ? Number(totalSilver) * 1500 : 0) +
+  (totalGold ? Number(totalGold) * 5000 : 0) +
+  (totalDiamond ? Number(totalDiamond) * 25000 : 0) +
+  (totalLegendary ? Number(totalLegendary) * 500000 : 0);
+
+const correctedTotalEarned =
+  totalEarnedNumber + bonusEarned;
+
+const totalEarnedReadable =
+  correctedTotalEarned.toLocaleString();
 
   const totalSilverCount = totalSilver ? Number(totalSilver) : 0;
   const totalGoldCount = totalGold ? Number(totalGold) : 0;
