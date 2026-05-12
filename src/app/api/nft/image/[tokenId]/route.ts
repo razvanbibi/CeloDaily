@@ -107,7 +107,7 @@ const logoBase64 = await fetchAsBase64(
     fill="#e5e7eb"
     font-size="15"
     font-weight="600">
-    ${profile?.name ?? "Base user"}
+    ${profile?.name ?? "Celo user"}
   </text>
 
   <!-- fid -->
@@ -158,7 +158,7 @@ const logoBase64 = await fetchAsBase64(
     fill="#94a3b8"
     font-size="10"
     text-anchor="start">
-    BaseDaily Identity NFT
+    CeloDaily Identity NFT
   </text>
 </g>
 
