@@ -13,7 +13,7 @@ export async function GET(
 ) {
   const tokenId = Number(params.tokenId);
 
-  const provider = new ethers.JsonRpcProvider("https://mainnet.base.org");
+  const provider = new ethers.JsonRpcProvider("https://forno.celo.org");
   const nft = new ethers.Contract(NFT_CONTRACT, NFT_ABI, provider);
   const owner = await nft.ownerOf(tokenId);
 
