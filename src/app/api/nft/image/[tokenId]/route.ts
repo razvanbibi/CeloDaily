@@ -22,7 +22,7 @@ export async function GET(
   const highestStreak = Number(await contract.highestStreak(owner));
 
   const avatar =
-    profile?.avatar ?? "https://basedaily-miniapp.vercel.app/avatar.png";
+    profile?.avatar ?? "https://celo-daily.vercel.app/avatar.png";
 
   async function fetchAsBase64(url: string): Promise<string | null> {
   try {
