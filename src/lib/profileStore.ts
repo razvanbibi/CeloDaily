@@ -24,7 +24,6 @@ export async function saveProfile(
   };
 
 
-
 export async function getProfile(address: string) {
   const res = await redis.hgetall<{
     name?: string;
