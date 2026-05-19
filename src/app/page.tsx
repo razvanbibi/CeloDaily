@@ -879,9 +879,7 @@ export default function HomePage() {
         return;
       }
 
-      const amountScaled = BigInt(
-        Math.round(amountNumber * 1_000_000)
-      );
+      const amountScaled = ethers.parseUnits(raw, 18);
 
       setLoading(true);
 
