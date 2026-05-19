@@ -1100,11 +1100,9 @@ export default function HomePage() {
 
   async function loadDonationLeaderboard() {
     try {
-      const eth = getEthereum();
-      if (!eth) return;
-
-      // MetaMask provider
-      const provider = new ethers.BrowserProvider(eth as any);
+      const provider = new ethers.JsonRpcProvider(
+        "https://forno.celo.org"
+      );
 
       // ethers v6 interface
       const iface = new ethers.Interface([
