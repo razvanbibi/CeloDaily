@@ -30,7 +30,7 @@ type Supporter = {
 };
 
 
-const CELO_USDC_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
+const USDM_TOKEN_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
 
 const DONATION_CONTRACT =
@@ -399,7 +399,7 @@ export default function HomePage() {
       "function approve(address spender, uint256 amount) returns (bool)",
     ];
 
-    const usdc = new ethers.Contract(CELO_USDC_ADDRESS, usdcAbi, signer);
+    const usdc = new ethers.Contract(USDM_TOKEN_ADDRESS, usdcAbi, signer);
     return { provider, signer, usdc };
   }
 
