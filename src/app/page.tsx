@@ -1901,6 +1901,26 @@ export default function HomePage() {
                 >
                   {hasIdentityNFT ? "View Identity" : "Mint Identity"}
                 </button>
+
+                <button
+                  onClick={() => setShowVault(true)}
+                  className="
+    mt-2
+    px-3 py-1.5
+    rounded-xl
+    bg-gradient-to-r from-emerald-400 to-cyan-400
+    text-slate-950
+    font-semibold
+    text-[11px]
+    shadow-md
+    hover:brightness-110
+    active:scale-[0.97]
+    transition
+  "
+                >
+                  Vault
+                </button>
+
               </div>
             </div>
           </div>
