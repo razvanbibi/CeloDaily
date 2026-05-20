@@ -1007,6 +1007,40 @@ export default function HomePage() {
     }
   }
 
+  async function handleVaultWithdraw() {
+    try {
+      if (!account) {
+        setStatus("Connect wallet first");
+        return;
+      }
+
+      const amountScaled = ethers.parseUnits(vaultAmount, 18);
+
+      setLoading(true);
+
+      const { contract } = await getVaultContractWithSigner();
+
+      const tx = await contract.withdraw(amountScaled);
+
+      await tx.wait();
+
+      setStatus("Withdraw successful 💸");
+
+      await loadVaultData();
+
+    } catch (err: any) {
+      console.error(err);
+
+      setStatus(
+        err?.shortMessage ??
+        err?.message ??
+        "Withdraw failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleShare() {
     const APP_URL = "https://celo-daily.vercel.app/";
 
