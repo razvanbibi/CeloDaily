@@ -31,6 +31,7 @@ body {
     transform: translateY(14px) scale(0.96);
     box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.0);
   }
+
   60% {
     opacity: 1;
     transform: translateY(0) scale(1.02);
@@ -43,6 +44,7 @@ body {
     box-shadow: 0 8px 30px 0 rgba(15, 23, 42, 0.9);
   }
 }
+
 @keyframes overlayFade {
   0% {
     opacity: 0;
@@ -242,16 +244,29 @@ body {
 }
 
 @keyframes breath {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(56,189,248,0.0); }
-  50% { transform: scale(1.06); box-shadow: 0 0 18px rgba(56,189,248,0.45); }
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(56, 189, 248, 0.0);
+  }
+
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+  }
 }
+
 @keyframes identityPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 0 rgba(56,189,248,0));
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(56, 189, 248, 0));
     opacity: 1;
   }
+
   50% {
-    filter: drop-shadow(0 0 12px rgba(56,189,248,0.45));
+    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));
     opacity: 0.95;
   }
 }
@@ -260,7 +275,8 @@ body {
 .basedaily-day-bg {
   position: absolute;
   inset: 0;
-  background-color: #f6f7f9; /* Base app white */
+  background-color: #f6f7f9;
+  /* Base app white */
   overflow: hidden;
 }
 
@@ -272,21 +288,15 @@ body {
   pointer-events: none;
 
   background-image:
-    radial-gradient(
-      1100px 520px at 120% -10%,
+    radial-gradient(1100px 520px at 120% -10%,
       rgba(56, 189, 248, 0.35),
-      transparent 60%
-    ),
-    radial-gradient(
-      900px 460px at -20% 45%,
+      transparent 60%),
+    radial-gradient(900px 460px at -20% 45%,
       rgba(34, 197, 94, 0.28),
-      transparent 55%
-    ),
-    radial-gradient(
-      800px 400px at 50% 120%,
+      transparent 55%),
+    radial-gradient(800px 400px at 50% 120%,
       rgba(99, 102, 241, 0.22),
-      transparent 60%
-    );
+      transparent 60%);
 }
 
 /* DIAGONAL FLOW LINES (VISIBLE + NON-UNIFORM) */
@@ -298,22 +308,18 @@ body {
 
   background-image:
     /* MAIN FLOW LINES */
-    repeating-linear-gradient(
-      135deg,
+    repeating-linear-gradient(135deg,
       rgba(15, 23, 42, 0.18) 0px,
       rgba(15, 23, 42, 0.18) 1px,
       transparent 1px,
-      transparent 140px
-    ),
+      transparent 140px),
 
     /* SECONDARY SOFT LINES */
-    repeating-linear-gradient(
-      135deg,
+    repeating-linear-gradient(135deg,
       rgba(15, 23, 42, 0.08) 0px,
       rgba(15, 23, 42, 0.08) 1px,
       transparent 1px,
-      transparent 70px
-    );
+      transparent 70px);
 
   opacity: 0.75;
 }
@@ -322,28 +328,27 @@ body {
 .basedaily-drawer-day {
   background-color: #ffffff;
   background-image:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       rgba(15, 23, 42, 0.03) 0%,
       rgba(15, 23, 42, 0.015) 40%,
-      rgba(255, 255, 255, 0) 70%
-    ),
-    repeating-linear-gradient(
-      135deg,
+      rgba(255, 255, 255, 0) 70%),
+    repeating-linear-gradient(135deg,
       rgba(15, 23, 42, 0.04) 0px,
       rgba(15, 23, 42, 0.04) 1px,
       transparent 1px,
-      transparent 36px
-    );
+      transparent 36px);
 }
+
 @keyframes avatar-float {
   0% {
     transform: translateY(0) scale(0.9);
     opacity: 0.9;
   }
+
   30% {
     opacity: 1;
   }
+
   100% {
     transform: translateY(-80px) scale(1.15);
     opacity: 0;
@@ -355,6 +360,7 @@ body {
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
 }
+
 .you-row-highlight {
   position: relative;
 }
@@ -364,24 +370,42 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 8px;
-  background: linear-gradient(
-    120deg,
-    rgba(56, 189, 248, 0.28),
-    rgba(99, 102, 241, 0.28),
-    rgba(56, 189, 248, 0.28)
-  );
+  background: linear-gradient(120deg,
+      rgba(56, 189, 248, 0.28),
+      rgba(99, 102, 241, 0.28),
+      rgba(56, 189, 248, 0.28));
   background-size: 200% 200%;
   animation: youGlow 3s ease-in-out infinite;
   z-index: 0;
 }
 
-.you-row-highlight > * {
+.you-row-highlight>* {
   position: relative;
   z-index: 1;
 }
 
 @keyframes youGlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes vaultPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.88) translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
