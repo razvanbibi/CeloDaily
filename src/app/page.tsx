@@ -2318,7 +2318,17 @@ export default function HomePage() {
 
               <button
                 onClick={() => setShowVault(false)}
-                className="text-slate-400 hover:text-white"
+                className="
+    absolute right-0
+    h-8 w-8
+    rounded-full
+    bg-white/5
+    border border-white/10
+    text-slate-400
+    hover:text-white
+    hover:bg-white/10
+    transition
+  "
               >
                 ✕
               </button>
