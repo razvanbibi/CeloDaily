@@ -35,7 +35,7 @@ const USDM_TOKEN_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
 
 const DONATION_CONTRACT =
-  "0xbd738bF1BC70De72D2C23234C72c854EDE73568b" as const; // CeloDailyDonations
+  "0x6ea4C7e400cC455712e284883E74B49402C5C818" as const; // CeloDailyDonations
 
 
 function AvatarBubbleStream({ avatar }: { avatar: string }) {
