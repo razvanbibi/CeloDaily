@@ -1109,6 +1109,29 @@ export default function HomePage() {
     }
   }
 
+  async function loadVaultData() {
+    try {
+      if (!account) return;
+
+      const { contract } = await getVaultReadOnlyContract();
+
+      const [vaultBal, userBal] = await Promise.all([
+        contract.getVaultBalance(),
+        contract.getUserBalance(account),
+      ]);
+
+      setVaultBalance(
+        ethers.formatUnits(vaultBal, 18)
+      );
+
+      setUserVaultBalance(
+        ethers.formatUnits(userBal, 18)
+      );
+
+    } catch (err) {
+      console.error("Vault load failed", err);
+    }
+  }
 
   async function loadDonationLeaderboard() {
     try {
