@@ -317,6 +317,12 @@ export default function HomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, ethReady]);
 
+  useEffect(() => {
+    if (!account) return;
+
+    loadVaultData();
+  }, [account]);
+
 
   useEffect(() => {
     // initial animation already true
