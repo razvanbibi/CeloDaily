@@ -2580,15 +2580,10 @@ export default function HomePage() {
                     setDevUnlocked(true);
 
                   }
-
                 }}
-
                 placeholder="Enter 4-digit password"
-
                 className="w-full rounded-xl px-3 py-2 text-xs bg-slate-900 border border-slate-700 text-slate-100"
-
               />
-
             )}
 
             {devUnlocked && (
