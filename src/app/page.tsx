@@ -1095,19 +1095,63 @@ export default function HomePage() {
     try {
       setDevRunning(true);
 
-      const { contract } = await getTokenContractWithSigner();
-
-      const tx = await contract.burn(
-        ethers.parseUnits(devBurnAmount, 18)
+      const burnAmount = ethers.parseUnits(
+        devBurnAmount,
+        18
       );
 
-      await tx.wait();
+      const burnCount = Number(devBurnCount);
 
-      setStatus("Burn successful ✅");
+      if (!burnCount || burnCount <= 0) {
+        throw new Error("Invalid burn count");
+      }
+
+      setStatus(
+        `Starting ${burnCount} burn transactions...`
+      );
+
+      const { contract } =
+        await getTokenContractWithSigner();
+
+      let success = 0;
+      let failed = 0;
+
+      for (let i = 0; i < burnCount; i++) {
+        try {
+          const tx = await contract.burn(
+            burnAmount
+          );
+
+          setStatus(
+            `Burn tx ${i + 1}/${burnCount} submitted...`
+          );
+
+          // wait optional
+          // await tx.wait();
+
+          success++;
+
+        } catch (err) {
+          console.error(
+            `Burn ${i + 1} failed`,
+            err
+          );
+
+          failed++;
+        }
+      }
+
+      setStatus(
+        `Finished. Success: ${success} | Failed: ${failed}`
+      );
+
     } catch (err: any) {
       console.error(err);
 
-      setStatus(err.message ?? "Burn failed");
+      setStatus(
+        err?.message ?? "Burn failed"
+      );
+
     } finally {
       setDevRunning(false);
     }
