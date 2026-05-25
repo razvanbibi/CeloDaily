@@ -1144,6 +1144,7 @@ export default function HomePage() {
     }
   }
 
+  
   async function handleDevClaim() {
     try {
       setDevRunning(true);
