@@ -2352,18 +2352,52 @@ export default function HomePage() {
                 {/* Icon */}
                 <div
                   className="
-              flex h-12 w-12 items-center justify-center
-              rounded-2xl
-              border border-yellow-500/20
-              bg-gradient-to-br
-              from-yellow-400/30
-              to-yellow-600/10
-              shadow-[0_0_25px_rgba(255,200,0,0.2)]
-            "
+    relative
+    flex h-12 w-12 items-center justify-center
+    overflow-hidden
+    rounded-2xl
+    border border-yellow-500/15
+    bg-[#16120a]
+    shadow-[0_0_30px_rgba(255,180,0,0.14)]
+  "
                 >
-                  <span className="text-2xl">
-                    🪙
-                  </span>
+
+                  {/* Glow */}
+                  <div
+                    className="
+      absolute inset-0
+      bg-[radial-gradient(circle_at_top_left,rgba(255,200,0,0.22),transparent_55%)]
+    "
+                  />
+
+                  {/* Inner Icon */}
+                  <div
+                    className="
+      relative
+      flex h-7 w-7 items-center justify-center
+      rounded-xl
+      border border-yellow-400/40
+      bg-[#23190b]
+      text-yellow-300
+      shadow-[inset_0_0_10px_rgba(255,220,120,0.12)]
+    "
+                  >
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="h-4 w-4"
+                    >
+                      <path d="M12 3L5 7v5c0 5 3.5 8 7 9 3.5-1 7-4 7-9V7l-7-4z" />
+                      <path d="M9.5 12h5" />
+                      <path d="M12 9.5v5" />
+                    </svg>
+
+                  </div>
+
                 </div>
 
                 {/* Title */}
