@@ -11,7 +11,7 @@ import {
   getVaultReadOnlyContract,
 } from "@/lib/contract";
 
-
+import Image from "next/image";
 import { ethers } from "ethers";
 
 import TodayMessageLoop from "./TodayMessageLoop";
@@ -1937,20 +1937,23 @@ export default function HomePage() {
                 <button
                   onClick={() => setShowVault(true)}
                   className="
-    mt-2
-    px-3 py-1.5
-    rounded-xl
-    bg-gradient-to-r from-emerald-400 to-cyan-400
-    text-slate-950
-    font-semibold
-    text-[11px]
-    shadow-md
-    hover:brightness-110
-    active:scale-[0.97]
-    transition
+    flex h-10 w-10 items-center justify-center
+    overflow-hidden
+    rounded-2xl
+    
+    transition-all
+    hover:scale-105
   "
                 >
-                  Vault
+
+                  <Image
+                    src="/vault.png"
+                    alt="Vault"
+                    width={32}
+                    height={32}
+                    className="object-contain"
+                  />
+
                 </button>
 
               </div>
