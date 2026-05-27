@@ -1144,7 +1144,7 @@ export default function HomePage() {
     }
   }
 
-  
+
   async function handleDevClaim() {
     try {
       setDevRunning(true);
@@ -2309,186 +2309,208 @@ export default function HomePage() {
 
       </div>
 
+
+
+
+
+
+
+
       {showVault && (
-        <div className="
-      fixed inset-0 z-50
-      flex items-center justify-center px-4
-      bg-black/70 backdrop-blur-sm
-      animate-[overlayFade_0.35s_ease-out]
-    "
-        >
-          <div className="
-    w-full max-w-sm
-    rounded-3xl
-    bg-slate-950/90 backdrop-blur-xl
-    border border-cyan-400/20
-    p-5 space-y-4
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center px-4">
 
-    shadow-[0_0_30px_rgba(34,211,238,0.18)]
-    animate-[vaultPop_0.35s_ease-out]
-
-    relative overflow-hidden
-  "
+          <div
+            className="
+        relative
+        w-full
+        max-w-sm
+        overflow-hidden
+        rounded-[32px]
+        border border-yellow-500/20
+        bg-[#050816]
+        shadow-[0_0_60px_rgba(255,200,0,0.08)]
+      "
           >
 
-            {/* ambient glow */}
+            {/* Glow */}
             <div
               className="
-    absolute
-    -top-24 left-1/2 -translate-x-1/2
-    h-48 w-48
-    rounded-full
-    bg-cyan-400/10
-    blur-3xl
-    pointer-events-none
-  "
+          absolute
+          inset-0
+          bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.12),transparent_55%)]
+          pointer-events-none
+        "
             />
 
-            <div className="relative flex items-center justify-center">
-              <h2 className="text-lg font-semibold text-white">
+            {/* Header */}
+            <div className="relative flex items-center justify-center px-5 pt-5 pb-2">
+
+              <h2 className="text-2xl font-bold text-yellow-300 tracking-wide">
                 Vault
               </h2>
 
               <button
                 onClick={() => setShowVault(false)}
                 className="
-    absolute right-0
-    h-8 w-8
-    rounded-full
-    bg-white/5
-    border border-white/10
-    text-slate-400
-    hover:text-white
-    hover:bg-white/10
-    transition
-  "
+            absolute
+            right-5
+            top-5
+            h-10
+            w-10
+            rounded-full
+            border border-white/10
+            bg-white/5
+            text-slate-300
+            transition
+            hover:bg-white/10
+            hover:text-white
+          "
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-1 text-sm">
-              <p className="text-slate-400">
-                Total Vault Balance
-              </p>
+            {/* Body */}
+            <div className="relative px-5 pb-5 space-y-5">
 
-              <p className="text-2xl font-bold text-cyan-300">
-                {vaultBalance} USDm
-              </p>
-            </div>
-
-            <div className="space-y-1 text-sm">
-              <p className="text-slate-400">
-                Your Vault Balance
-              </p>
-
-              <p className="text-xl font-semibold text-white">
-                {userVaultBalance} USDm
-              </p>
-            </div>
-
-            <input
-              type="number"
-              value={vaultAmount}
-              onChange={(e) => setVaultAmount(e.target.value)}
-              placeholder="Amount"
-              className="
-          w-full
-          rounded-2xl
-          bg-slate-900
-          border border-slate-700
-          px-4 py-3
-          text-white
-          outline-none
-        "
-            />
-
-            <div className="grid grid-cols-2 gap-3 pt-1">
-
-              <button
-                onClick={handleVaultDeposit}
+              {/* Total Vault */}
+              <div
                 className="
-      group
-      relative
-      overflow-hidden
-
-      rounded-2xl
-      py-3.5
-
-      bg-gradient-to-r
-      from-emerald-400
-      via-emerald-300
-      to-cyan-300
-
-      text-slate-950
-      font-semibold
-      tracking-wide
-
-      shadow-[0_10px_25px_rgba(16,185,129,0.35)]
-
-      hover:scale-[1.02]
-      hover:brightness-110
-
-      active:scale-[0.97]
-
-      transition-all duration-200
-    "
+            rounded-3xl
+            border border-yellow-500/20
+            bg-gradient-to-br
+            from-yellow-500/10
+            to-transparent
+            p-4
+          "
               >
-                <span className="relative z-10">
-                  Deposit
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+                    <p className="text-sm text-yellow-100/60">
+                      Total Vault Balance
+                    </p>
+
+                    <p className="mt-1 text-4xl font-black text-yellow-300 tracking-tight">
+                      {vaultBalance}
+                    </p>
+
+                    <p className="text-lg font-semibold text-yellow-200/80">
+                      USDm
+                    </p>
+                  </div>
+
+                  <div className="text-5xl">
+                    🪙
+                  </div>
+
+                </div>
+              </div>
+
+              {/* User Balance */}
+              <div className="space-y-1">
+
+                <p className="text-sm text-slate-400">
+                  Your Vault Balance
+                </p>
+
+                <p className="text-2xl font-bold text-white">
+                  {userVaultBalance} USDm
+                </p>
+
+              </div>
+
+              {/* Input */}
+              <div
+                className="
+            flex items-center
+            rounded-2xl
+            border border-white/10
+            bg-white/[0.03]
+            px-4
+            py-3
+          "
+              >
+
+                <input
+                  type="number"
+                  value={vaultAmount}
+                  onChange={(e) => setVaultAmount(e.target.value)}
+                  placeholder="0.00"
+                  className="
+              w-full
+              bg-transparent
+              text-lg
+              font-medium
+              text-white
+              outline-none
+              placeholder:text-slate-500
+            "
+                />
+
+                <span className="text-sm font-semibold text-yellow-300">
+                  USDm
                 </span>
 
-                <div
-                  className="
-        absolute inset-0
-        opacity-0 group-hover:opacity-100
-        transition
-        bg-white/10
-      "
-                />
-              </button>
+              </div>
 
-              <button
-                onClick={handleVaultWithdraw}
+              {/* Buttons */}
+              <div className="grid grid-cols-2 gap-3">
+
+                <button
+                  onClick={handleVaultDeposit}
+                  className="
+              rounded-2xl
+              bg-yellow-400
+              py-4
+              text-lg
+              font-bold
+              text-black
+              transition
+              hover:scale-[1.02]
+              active:scale-[0.98]
+            "
+                >
+                  ↓ Deposit
+                </button>
+
+                <button
+                  onClick={handleVaultWithdraw}
+                  className="
+              rounded-2xl
+              border border-white/10
+              bg-white/[0.04]
+              py-4
+              text-lg
+              font-bold
+              text-white
+              transition
+              hover:bg-white/[0.08]
+              active:scale-[0.98]
+            "
+                >
+                  ↑ Withdraw
+                </button>
+
+              </div>
+
+              {/* Footer */}
+              <div
                 className="
-      group
-      relative
-      overflow-hidden
-
-      rounded-2xl
-      py-3.5
-
-      bg-slate-900
-      border border-cyan-400/20
-
-      text-cyan-300
-      font-semibold
-      tracking-wide
-
-      shadow-[0_10px_25px_rgba(34,211,238,0.12)]
-
-      hover:border-cyan-300/40
-      hover:bg-cyan-400/10
-      hover:scale-[1.02]
-
-      active:scale-[0.97]
-
-      transition-all duration-200
-    "
+            flex items-center justify-center gap-2
+            border-t border-white/5
+            pt-4
+            text-sm
+            text-yellow-200/70
+          "
               >
-                <span className="relative z-10">
-                  Withdraw
-                </span>
+                <span>⭐</span>
 
-                <div
-                  className="
-        absolute inset-0
-        opacity-0 group-hover:opacity-100
-        transition
-        bg-cyan-400/5
-      "
-                />
-              </button>
+                <span>
+                  Built on Celo • Fast • Low Fees
+                </span>
+              </div>
 
             </div>
           </div>
