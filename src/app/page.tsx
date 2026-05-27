@@ -2317,46 +2317,79 @@ export default function HomePage() {
 
 
       {showVault && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center px-4">
+        <div className="fixed inset-0 z-[999] flex items-center justify-center px-4">
 
+          {/* Backdrop */}
+          <div
+            className="
+        absolute inset-0
+        bg-black/70
+        backdrop-blur-md
+      "
+            onClick={() => setShowVault(false)}
+          />
+
+          {/* Modal */}
           <div
             className="
         relative
         w-full
-        max-w-sm
-        overflow-hidden
+        max-w-[380px]
         rounded-[32px]
-        border border-yellow-500/20
+        border
+        border-cyan-400/20
         bg-[#050816]
-        shadow-[0_0_60px_rgba(255,200,0,0.08)]
+        p-4
+        shadow-[0_0_60px_rgba(0,255,255,0.12)]
       "
           >
 
-            {/* Glow */}
-            <div
-              className="
-          absolute
-          inset-0
-          bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.12),transparent_55%)]
-          pointer-events-none
-        "
-            />
+            {/* Top Header */}
+            <div className="mb-4 flex items-center justify-between">
 
-            {/* Header */}
-            <div className="relative flex items-center justify-center px-5 pt-5 pb-2">
+              <div className="flex items-center gap-3">
 
-              <h2 className="text-2xl font-bold text-yellow-300 tracking-wide">
-                Vault
-              </h2>
+                {/* Icon */}
+                <div
+                  className="
+              flex h-12 w-12 items-center justify-center
+              rounded-2xl
+              border border-yellow-500/20
+              bg-gradient-to-br
+              from-yellow-400/30
+              to-yellow-600/10
+              shadow-[0_0_25px_rgba(255,200,0,0.2)]
+            "
+                >
+                  <span className="text-2xl">
+                    🪙
+                  </span>
+                </div>
 
+                {/* Title */}
+                <div>
+                  <h2
+                    className="
+                text-[28px]
+                font-black
+                tracking-tight
+                text-yellow-300
+              "
+                  >
+                    Vault
+                  </h2>
+
+                  <p className="text-xs text-slate-400">
+                    Store your USDm securely
+                  </p>
+                </div>
+              </div>
+
+              {/* Close */}
               <button
                 onClick={() => setShowVault(false)}
                 className="
-            absolute
-            right-5
-            top-5
-            h-10
-            w-10
+            flex h-11 w-11 items-center justify-center
             rounded-full
             border border-white/10
             bg-white/5
@@ -2370,147 +2403,207 @@ export default function HomePage() {
               </button>
             </div>
 
-            {/* Body */}
-            <div className="relative px-5 pb-5 space-y-5">
+            {/* Total Vault Balance Card */}
+            <div
+              className="
+          relative
+          overflow-hidden
+          rounded-[24px]
+          border border-yellow-500/15
+          bg-[#11141d]
+          px-5
+          py-5
+          shadow-[0_0_50px_rgba(255,180,0,0.08)]
+        "
+            >
 
-              {/* Total Vault */}
+              {/* Glow */}
               <div
                 className="
-            rounded-3xl
-            border border-yellow-500/20
-            bg-gradient-to-br
-            from-yellow-500/10
-            to-transparent
-            p-4
+            absolute inset-0
+            bg-[radial-gradient(circle_at_top_left,rgba(255,180,0,0.22),transparent_45%)]
+            pointer-events-none
           "
-              >
+              />
 
-                <div className="flex items-center justify-between">
+              {/* Bottom Beam */}
+              <div
+                className="
+            absolute bottom-0 left-0 right-0
+            h-[1px]
+            bg-gradient-to-r
+            from-transparent
+            via-yellow-400/50
+            to-transparent
+          "
+              />
 
-                  <div>
-                    <p className="text-sm text-yellow-100/60">
-                      Total Vault Balance
-                    </p>
+              <div className="relative flex items-center justify-between">
 
-                    <p className="mt-1 text-4xl font-black text-yellow-300 tracking-tight">
-                      {vaultBalance}
-                    </p>
+                {/* Left */}
+                <div>
 
-                    <p className="text-lg font-semibold text-yellow-200/80">
-                      USDm
-                    </p>
-                  </div>
+                  <p className="text-[13px] font-medium text-yellow-100/70">
+                    Total Vault Balance
+                  </p>
 
-                  <div className="text-5xl">
+                  <h2
+                    className="
+                mt-1
+                text-[30px]
+                font-black
+                tracking-tight
+                text-yellow-300
+                drop-shadow-[0_0_10px_rgba(255,210,0,0.25)]
+              "
+                  >
+                    {vaultBalance} USDm
+                  </h2>
+
+                </div>
+
+                {/* Right */}
+                <div className="relative flex items-center">
+
+                  {/* Graph */}
+                  <svg
+                    width="90"
+                    height="40"
+                    viewBox="0 0 90 40"
+                    fill="none"
+                    className="absolute right-7 opacity-80"
+                  >
+                    <path
+                      d="
+                  M0 28
+                  C15 10, 25 10, 40 28
+                  S65 38, 90 12
+                "
+                      stroke="url(#gold)"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+
+                    <defs>
+                      <linearGradient
+                        id="gold"
+                        x1="0"
+                        y1="0"
+                        x2="90"
+                        y2="0"
+                      >
+                        <stop stopColor="#facc15" />
+                        <stop offset="1" stopColor="#fde68a" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+
+                  {/* Coin */}
+                  <div className="relative z-10 text-[52px]">
                     🪙
                   </div>
 
                 </div>
               </div>
+            </div>
 
-              {/* User Balance */}
-              <div className="space-y-1">
+            {/* User Balance */}
+            <div
+              className="
+          mt-4
+          rounded-2xl
+          border border-cyan-400/10
+          bg-cyan-400/5
+          p-4
+        "
+            >
 
-                <p className="text-sm text-slate-400">
-                  Your Vault Balance
-                </p>
+              <p className="text-sm text-cyan-200/70">
+                Your Vault Balance
+              </p>
 
-                <p className="text-2xl font-bold text-white">
-                  {userVaultBalance} USDm
-                </p>
-
-              </div>
-
-              {/* Input */}
-              <div
+              <h3
                 className="
-            flex items-center
+            mt-1
+            text-2xl
+            font-bold
+            text-cyan-300
+          "
+              >
+                {userVaultBalance} USDm
+              </h3>
+
+            </div>
+
+            {/* Input */}
+            <div className="mt-4">
+
+              <input
+                type="number"
+                value={vaultAmount}
+                onChange={(e) => setVaultAmount(e.target.value)}
+                placeholder="Enter USDm amount"
+                className="
+            w-full
             rounded-2xl
-            border border-white/10
-            bg-white/[0.03]
-            px-4
-            py-3
+            border
+            border-white/10
+            bg-white/[0.04]
+            px-5
+            py-4
+            text-lg
+            font-medium
+            text-white
+            outline-none
+            placeholder:text-slate-500
+            focus:border-cyan-400/40
           "
-              >
+              />
 
-                <input
-                  type="number"
-                  value={vaultAmount}
-                  onChange={(e) => setVaultAmount(e.target.value)}
-                  placeholder="0.00"
-                  className="
-              w-full
-              bg-transparent
-              text-lg
-              font-medium
-              text-white
-              outline-none
-              placeholder:text-slate-500
-            "
-                />
+            </div>
 
-                <span className="text-sm font-semibold text-yellow-300">
-                  USDm
-                </span>
+            {/* Buttons */}
+            <div className="mt-5 grid grid-cols-2 gap-4">
 
-              </div>
-
-              {/* Buttons */}
-              <div className="grid grid-cols-2 gap-3">
-
-                <button
-                  onClick={handleVaultDeposit}
-                  className="
-              rounded-2xl
-              bg-yellow-400
-              py-4
-              text-lg
-              font-bold
-              text-black
-              transition
-              hover:scale-[1.02]
-              active:scale-[0.98]
-            "
-                >
-                  ↓ Deposit
-                </button>
-
-                <button
-                  onClick={handleVaultWithdraw}
-                  className="
-              rounded-2xl
-              border border-white/10
-              bg-white/[0.04]
-              py-4
-              text-lg
-              font-bold
-              text-white
-              transition
-              hover:bg-white/[0.08]
-              active:scale-[0.98]
-            "
-                >
-                  ↑ Withdraw
-                </button>
-
-              </div>
-
-              {/* Footer */}
-              <div
+              {/* Deposit */}
+              <button
+                onClick={handleVaultDeposit}
                 className="
-            flex items-center justify-center gap-2
-            border-t border-white/5
-            pt-4
-            text-sm
-            text-yellow-200/70
+            relative overflow-hidden
+            rounded-2xl
+            bg-gradient-to-r
+            from-emerald-400
+            to-cyan-400
+            py-4
+            text-lg
+            font-black
+            text-slate-950
+            shadow-[0_0_30px_rgba(0,255,180,0.3)]
+            transition-all
+            hover:scale-[1.02]
           "
               >
-                <span>⭐</span>
+                Deposit
+              </button>
 
-                <span>
-                  Built on Celo • Fast • Low Fees
-                </span>
-              </div>
+              {/* Withdraw */}
+              <button
+                onClick={handleVaultWithdraw}
+                className="
+            rounded-2xl
+            border
+            border-cyan-400/20
+            bg-cyan-400/5
+            py-4
+            text-lg
+            font-black
+            text-cyan-300
+            transition-all
+            hover:bg-cyan-400/10
+          "
+              >
+                Withdraw
+              </button>
 
             </div>
           </div>
