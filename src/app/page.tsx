@@ -1918,18 +1918,49 @@ export default function HomePage() {
                 <button
                   onClick={() => setShowMintIdentity(true)}
                   className="
-      mt-2
-      px-3 py-1.5
-      rounded-xl
-      bg-gradient-to-r from-indigo-500 via-sky-500 to-blue-500
-      text-slate-950
-      font-semibold
-      text-[11px]
-      shadow-md shadow-sky-900/30
-      hover:brightness-110
-      active:scale-[0.97]
-      transition
-    "
+  group
+  relative
+  isolate
+  overflow-hidden
+  rounded-2xl
+
+  border border-white/15
+  bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.04))]
+  
+  px-3 py-1.5
+
+  text-[11px]
+  font-semibold
+  tracking-[0.18em]
+  uppercase
+    text-slate-950
+
+  backdrop-blur-3xl
+  shadow-[0_10px_30px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)]
+
+  transition-all
+  duration-500
+  hover:scale-[1.03]
+  hover:border-white/30
+  hover:shadow-[0_15px_45px_rgba(0,0,0,0.55),0_0_25px_rgba(255,255,255,0.12)]
+
+  before:absolute
+  before:inset-0
+  before:rounded-2xl
+  before:bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.35),transparent_45%)]
+
+  after:absolute
+  after:inset-0
+  after:rounded-2xl
+  after:bg-[linear-gradient(120deg,transparent_20%,rgba(255,255,255,0.22)_50%,transparent_80%)]
+  after:translate-x-[-160%]
+  hover:after:translate-x-[160%]
+  after:transition-transform
+  after:duration-[1800ms]
+
+  [&>span]:relative
+  [&>span]:z-10
+"
                 >
                   {hasIdentityNFT ? "View Identity" : "Mint Identity"}
                 </button>
@@ -2553,7 +2584,7 @@ export default function HomePage() {
 
                 <input
                   type="number"
-                   min="0"
+                  min="0"
                   value={vaultAmount}
                   onChange={(e) => setVaultAmount(e.target.value)}
                   placeholder="0"
