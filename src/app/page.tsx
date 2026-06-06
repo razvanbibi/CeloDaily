@@ -2135,7 +2135,6 @@ export default function HomePage() {
                 className="h-full w-full object-cover"
               />
             </div>
-
             {/* RUN ANIMATION OVERLAY (visual only) */}
             <div
               id="avatar-runner"

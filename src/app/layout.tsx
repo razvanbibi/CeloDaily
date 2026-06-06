@@ -6,7 +6,6 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "CeloDaily",
   description: "Daily check-ins on Celo to grow your streak and earn rewards",
-
   openGraph: {
     title: "CeloDaily",
     description:
