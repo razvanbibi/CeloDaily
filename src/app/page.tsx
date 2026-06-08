@@ -31,7 +31,6 @@ type Supporter = {
   avatar?: string;
 };
 
-
 const USDM_TOKEN_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
 
 
@@ -97,7 +96,6 @@ export default function HomePage() {
   const [hasCheckedInToday, setHasCheckedInToday] = useState(false);
   const [recentlyClaimed, setRecentlyClaimed] = useState(false);
   const [toast, setToast] = useState<Toast>(null);
-
   const [totalSilver, setTotalSilver] = useState<bigint | null>(null);
   const [totalGold, setTotalGold] = useState<bigint | null>(null);
   const [totalDiamond, setTotalDiamond] = useState<bigint | null>(null);
@@ -107,7 +105,6 @@ export default function HomePage() {
   const [pendingGold, setPendingGold] = useState<bigint | null>(null);
   const [pendingDiamond, setPendingDiamond] = useState<bigint | null>(null);
   const [pendingLegendary, setPendingLegendary] = useState<bigint | null>(null);
-
 
   const [showDonate, setShowDonate] = useState(false);
 
