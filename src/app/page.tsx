@@ -13,7 +13,6 @@ import Image from "next/image";
 import { ethers } from "ethers";
 import TodayMessageLoop from "./TodayMessageLoop";
 import { saveDonation } from "@/lib/donationStore";
-
 type Status = string | null;
 
 type Toast =
