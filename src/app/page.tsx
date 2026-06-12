@@ -11,7 +11,6 @@ import {
 } from "@/lib/contract";
 import Image from "next/image";
 import { ethers } from "ethers";
-
 import TodayMessageLoop from "./TodayMessageLoop";
 import { saveDonation } from "@/lib/donationStore";
 
