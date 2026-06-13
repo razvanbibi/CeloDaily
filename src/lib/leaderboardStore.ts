@@ -1,7 +1,6 @@
 
 
 import { Redis } from "@upstash/redis";
-
 const redis = Redis.fromEnv();
 // একটি Redis Set ব্যবহার 
 const KEY = "celodaily:leaderboard:addresses";
