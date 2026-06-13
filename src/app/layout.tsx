@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "@fontsource/geist";
-import "@fontsource/geist-mono";   // Geist Mono
+import "@fontsource/geist-mono";   // Geist
 import "./globals.css";
 export const metadata: Metadata = {
   title: "CeloDaily",
