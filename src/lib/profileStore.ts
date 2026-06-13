@@ -46,4 +46,3 @@ export async function getProfiles(addresses: string[]) {
   return profiles;
 }
 
-
