@@ -92,7 +92,6 @@ export default function HomePage() {
   const [pendingLegendary, setPendingLegendary] = useState<bigint | null>(null);
   const [showDonate, setShowDonate] = useState(false);
   const [showVault, setShowVault] = useState(false);
-
   const [vaultAmount, setVaultAmount] = useState("1");
 
   const [vaultBalance, setVaultBalance] = useState("0");
