@@ -77,7 +77,6 @@ export default function HomePage() {
   const [totalEarned, setTotalEarned] = useState<bigint | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<Status>(null);
-
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [hasCheckedInToday, setHasCheckedInToday] = useState(false);
