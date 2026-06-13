@@ -14,7 +14,6 @@ import { ethers } from "ethers";
 import TodayMessageLoop from "./TodayMessageLoop";
 import { saveDonation } from "@/lib/donationStore";
 type Status = string | null;
-
 type Toast =
   | { type: "checkin"; message: string }
   | { type: "claim"; message: string }
