@@ -18,7 +18,6 @@ export async function saveProfile(
     avatar: data.avatar,
     })
   };
-
 export async function getProfile(address: string) {
   const res = await redis.hgetall<{
     name?: string;
