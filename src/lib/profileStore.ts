@@ -24,7 +24,6 @@ export async function getProfile(address: string) {
     avatar?: string;
     highestStreak?: string;
   }>(KEY_PREFIX + address.toLowerCase());
-
   if (!res) return null;
   return {
     name: res.name ?? null,
