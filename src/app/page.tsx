@@ -90,9 +90,7 @@ export default function HomePage() {
   const [pendingGold, setPendingGold] = useState<bigint | null>(null);
   const [pendingDiamond, setPendingDiamond] = useState<bigint | null>(null);
   const [pendingLegendary, setPendingLegendary] = useState<bigint | null>(null);
-
   const [showDonate, setShowDonate] = useState(false);
-
   const [showVault, setShowVault] = useState(false);
 
   const [vaultAmount, setVaultAmount] = useState("1");
