@@ -34,7 +34,6 @@ export async function getProfile(address: string) {
     highestStreak: res.highestStreak
       ? Number(res.highestStreak)
       : null,
-      
   };
 }
 export async function getProfiles(addresses: string[]) {
