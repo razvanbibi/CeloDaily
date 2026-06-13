@@ -11,7 +11,6 @@ export async function saveStats(
     highestStreak: String(data.highestStreak),
   });
 }
-
 export async function saveProfile(
   address: string,
   data: { name: string | null; avatar: string | null;  }
