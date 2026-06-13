@@ -35,7 +35,6 @@ export async function getProfile(address: string) {
 }
 export async function getProfiles(addresses: string[]) {
   const profiles = await Promise.all(
-
     addresses.map(async (address) => {
       const profile = await getProfile(address);
       return {
