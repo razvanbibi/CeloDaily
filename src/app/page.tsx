@@ -86,7 +86,6 @@ export default function HomePage() {
   const [totalGold, setTotalGold] = useState<bigint | null>(null);
   const [totalDiamond, setTotalDiamond] = useState<bigint | null>(null);
   const [totalLegendary, setTotalLegendary] = useState<bigint | null>(null);
-
   const [pendingSilver, setPendingSilver] = useState<bigint | null>(null);
   const [pendingGold, setPendingGold] = useState<bigint | null>(null);
   const [pendingDiamond, setPendingDiamond] = useState<bigint | null>(null);
