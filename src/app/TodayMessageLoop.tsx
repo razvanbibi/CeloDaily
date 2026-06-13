@@ -38,7 +38,6 @@ export default function TodayMessageLoop({ isDarkMode, account }: Props) {
   ];
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
-
   useEffect(() => {
   const current = slides[index];
 
