@@ -75,7 +75,6 @@ export default function HomePage() {
   const [pendingTokens, setPendingTokens] = useState<bigint | null>(null);
   const [paused, setPaused] = useState<boolean | null>(null);
   const [totalEarned, setTotalEarned] = useState<bigint | null>(null);
-
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<Status>(null);
 
