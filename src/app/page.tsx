@@ -134,7 +134,7 @@ export default function HomePage() {
   const [isMiniPay, setIsMiniPay] = useState(false);
   const [showBadgeTooltip, setShowBadgeTooltip] = useState(false);
 
-  // একবারই ছোট onboarding দেখাবে
+  // একবারই  onboarding দেখাবে
   useEffect(() => {
     if (typeof window === "undefined") return;
 
