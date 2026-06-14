@@ -143,12 +143,9 @@ export default function HomePage() {
       window.localStorage.setItem("celodaily_onboarding_v1", "1");
     }
   }, []);
-
   const closeOnboarding = () => {
     setShowOnboarding(false);
   };
-
-
 
   // প্রথমবার লোড হলে থিম পড়ে আনা
   useEffect(() => {
