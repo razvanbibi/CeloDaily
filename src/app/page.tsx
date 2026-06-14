@@ -131,11 +131,8 @@ export default function HomePage() {
   const [devReverseAmount, setDevReverseAmount] = useState("");
   const [devMultiAddresses, setDevMultiAddresses] = useState("");
   const [devMultiAmounts, setDevMultiAmounts] = useState("");
-
   const [isMiniPay, setIsMiniPay] = useState(false);
   const [showBadgeTooltip, setShowBadgeTooltip] = useState(false);
-
-
 
   // একবারই ছোট onboarding দেখাবে
   useEffect(() => {
