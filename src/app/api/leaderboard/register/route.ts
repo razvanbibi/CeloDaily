@@ -15,6 +15,5 @@ const hs = Number(await contract.highestStreak(address));
 await saveStats(address, {
   highestStreak: hs,
 });
-
   return NextResponse.json({ ok: true });
 }
