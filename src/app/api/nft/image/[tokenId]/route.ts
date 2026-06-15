@@ -109,7 +109,6 @@ const logoBase64 = await fetchAsBase64(
     font-size="11">
     🔥 HIGHEST STREAK
   </text>
-
   <text x="72" y="182"
     fill="#94a3b8"
     font-size="11">
