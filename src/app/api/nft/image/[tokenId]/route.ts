@@ -99,7 +99,6 @@ const logoBase64 = await fetchAsBase64(
     font-weight="600">
     ${profile?.name ?? "Celo user"}
   </text>
-
   <!-- fid -->
   <text x="132" y="82"
     fill="#94a3b8"
