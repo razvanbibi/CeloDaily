@@ -2,7 +2,6 @@ export const runtime = "nodejs";
 import { getProfile } from "@/lib/profileStore";
 import { getReadOnlyContractServer } from "@/lib/contract.server";
 import { ethers } from "ethers";
-
 const NFT_CONTRACT = "0x934422770B2dA6d6CcA9CcaFf58523eC45491c43";
 const NFT_ABI = ["function ownerOf(uint256) view returns (address)"];
 
