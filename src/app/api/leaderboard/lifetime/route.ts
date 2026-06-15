@@ -23,7 +23,6 @@ export async function GET() {
       };
     })
   );
-
   rows.sort((a, b) => b.highestStreak - a.highestStreak);
   return NextResponse.json(rows.slice(0, 200));
 }
