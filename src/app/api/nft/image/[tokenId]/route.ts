@@ -105,7 +105,6 @@ const logoBase64 = await fetchAsBase64(
     fill="#94a3b8"
     font-size="11">
   </text>
-
   <!-- labels -->
   <text x="72" y="138"
     fill="#94a3b8"
