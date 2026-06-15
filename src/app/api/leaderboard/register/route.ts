@@ -16,6 +16,5 @@ await saveStats(address, {
   highestStreak: hs,
 });
 
-
   return NextResponse.json({ ok: true });
 }
