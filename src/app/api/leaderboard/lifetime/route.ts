@@ -8,7 +8,6 @@ const HIDDEN_ADDRESSES = new Set([
 
 export async function GET() {
   const addresses = await getAllAddresses();
-
   const visibleAddresses = addresses.filter(
   (addr) => !HIDDEN_ADDRESSES.has(addr.toLowerCase())
 );
