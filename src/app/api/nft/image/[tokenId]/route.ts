@@ -13,7 +13,6 @@ export async function GET(
   const provider = new ethers.JsonRpcProvider("https://forno.celo.org");
   const nft = new ethers.Contract(NFT_CONTRACT, NFT_ABI, provider);
   const owner = await nft.ownerOf(tokenId);
-
   const profile = await getProfile(owner);
   const { contract } = getReadOnlyContractServer();
   const highestStreak = Number(await contract.highestStreak(owner));
