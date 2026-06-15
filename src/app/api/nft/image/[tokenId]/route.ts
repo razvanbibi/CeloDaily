@@ -15,7 +15,6 @@ export async function GET(
   const profile = await getProfile(owner);
   const { contract } = getReadOnlyContractServer();
   const highestStreak = Number(await contract.highestStreak(owner));
-
   const avatar =
     profile?.avatar ?? "https://celo-daily.vercel.app/avatar.png";
 
