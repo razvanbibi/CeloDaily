@@ -10,7 +10,6 @@ export async function POST(req: Request) {
 
   // 1️⃣ address register
   await addAddress(address);
-
   // after addAddress(address)
 const { contract } = getReadOnlyContractServer();
 const hs = Number(await contract.highestStreak(address));
