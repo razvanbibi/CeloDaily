@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { addAddress } from "@/lib/leaderboardStore";
-
 import { saveStats } from "@/lib/profileStore";
 import { getReadOnlyContractServer } from "@/lib/contract.server";
 
