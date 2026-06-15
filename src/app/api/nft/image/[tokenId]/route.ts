@@ -134,7 +134,6 @@ const logoBase64 = await fetchAsBase64(
   text-anchor="end">
 </text>
 
-
   <!-- footer -->
 <g transform="translate(300 300)">
   <image
