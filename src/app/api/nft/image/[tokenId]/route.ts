@@ -115,7 +115,6 @@ const logoBase64 = await fetchAsBase64(
     font-size="11">
     ⭐ NEYNAR SCORE
   </text>
-
   <!-- values -->
   <text x="520" y="142"
     fill="url(#goldText)"
