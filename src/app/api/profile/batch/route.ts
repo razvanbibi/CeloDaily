@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-
 import { getProfiles } from "@/lib/profileStore";
 
 export async function POST(req: Request) {
