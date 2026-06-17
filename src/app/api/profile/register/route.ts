@@ -7,7 +7,6 @@ export async function POST(req: Request) {
   avatar,
 } = await req.json();
 
-
   if (!address) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
