@@ -123,7 +123,6 @@ export async function POST(req: NextRequest) {
     } catch (err: any) {
 
         console.error(err);
-
         return NextResponse.json(
             {
                 error:
