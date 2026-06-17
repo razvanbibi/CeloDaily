@@ -120,7 +120,6 @@ export async function POST(req: NextRequest) {
             total: hashes.length,
             hashes,
         });
-
     } catch (err: any) {
 
         console.error(err);
