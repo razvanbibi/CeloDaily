@@ -10,7 +10,6 @@ export async function POST(req: Request) {
   if (!address) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
-
   await saveProfile(address, {
     name: name ?? null,
     avatar: avatar ?? null,
