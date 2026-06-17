@@ -176,7 +176,6 @@ export default function HomePage() {
       setEthReady(true);
     }
   }, []);
-
   useEffect(() => {
     if (typeof window === "undefined") return;
 
