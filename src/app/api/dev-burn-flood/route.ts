@@ -44,7 +44,6 @@ export async function POST(req: NextRequest) {
                 wallet.address,
                 "pending"
             );
-
         const hashes: string[] = [];
 
         // safer batch size
