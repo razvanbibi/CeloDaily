@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
                     );
                 }
             }
-            // cooldow
+            // cool
             await new Promise(
                 (r) => setTimeout(r, 300)
             );
