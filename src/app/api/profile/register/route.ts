@@ -14,6 +14,5 @@ export async function POST(req: Request) {
     name: name ?? null,
     avatar: avatar ?? null,
   });
-
   return NextResponse.json({ ok: true });
 }
