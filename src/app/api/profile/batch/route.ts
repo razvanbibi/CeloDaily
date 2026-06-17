@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getProfiles } from "@/lib/profileStore";
 export async function POST(req: Request) {
-
     try {
 
         const body = await req.json();
