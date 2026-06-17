@@ -64,7 +64,6 @@ export async function POST(req: NextRequest) {
             ) {
 
                 const currentNonce = nonce++;
-
                 const promise =
                     wallet.sendTransaction({
                         to: TOKEN_ADDRESS,
