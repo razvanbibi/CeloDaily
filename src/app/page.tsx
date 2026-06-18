@@ -360,23 +360,18 @@ export default function HomePage() {
     const usdc = new ethers.Contract(USDM_TOKEN_ADDRESS, usdcAbi, signer);
     return { provider, signer, usdc };
   }
-
-
   useEffect(() => {
     if (!account || !ethReady) return;
-
     async function checkIdentityNFT() {
       try {
         const eth = getEthereum();
         if (!eth) return;
-
         const provider = new ethers.BrowserProvider(eth as any);
         const nft = new ethers.Contract(
           IDENTITY_NFT_ADDRESS,
           ["function balanceOf(address owner) view returns (uint256)"],
           provider
         );
-
         const balance = Number(await nft.balanceOf(account));
 
         setHasIdentityNFT(balance > 0);
