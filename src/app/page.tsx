@@ -145,7 +145,6 @@ export default function HomePage() {
   const closeOnboarding = () => {
     setShowOnboarding(false);
   };
-
   //প্রথমবার লোড হলে থিম পড়ে আনা
   useEffect(() => {
     if (typeof window === "undefined") return;
