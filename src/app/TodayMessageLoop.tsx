@@ -76,7 +76,7 @@ export default function TodayMessageLoop({ isDarkMode, account }: Props) {
           </>
         ) : (
           <>
-            {/* OTHER SLIDES — NO TITLE, BOTH SMALL */}
+            {/* OTHER SLIDES — NO TITLE, BOTH SM*/}
             <p
               className={`text-[11px] leading-tight ${
                 isDarkMode ? "text-slate-400" : "text-slate-900"
