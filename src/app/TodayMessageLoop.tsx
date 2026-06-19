@@ -90,7 +90,7 @@ export default function TodayMessageLoop({ isDarkMode, account }: Props) {
               {slide.second}
             </p>
           </>
-        )}
+        )} 
       </div>
     </div>
   );
