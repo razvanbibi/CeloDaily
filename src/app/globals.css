@@ -133,7 +133,6 @@ body {
     opacity: 0;
   }
 }
-
 @keyframes basedPop {
   0% {
     transform: scale(0.9);
