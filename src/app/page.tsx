@@ -2608,10 +2608,8 @@ export default function HomePage() {
 
                   Withdraw
                 </button>
-
               </div>
-
-              {/* Bottom Text */}
+              {/* Bottom Text */} 
               <div
                 className="
     mt-4
