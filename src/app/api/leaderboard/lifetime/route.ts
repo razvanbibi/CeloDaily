@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getAllAddresses } from "@/lib/leaderboardStore";
 import { getProfile } from "@/lib/profileStore";
 const HIDDEN_ADDRESSES = new Set([
-  "0xb539edcc1bf7d07cc5efe9f7d9d994adce31fde0",
+  " ",
 ]); 
 export async function GET() { 
   const addresses = await getAllAddresses(); 
