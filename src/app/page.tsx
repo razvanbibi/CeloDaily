@@ -3508,9 +3508,7 @@ export default function HomePage() {
               <div className="flex items-center gap-3">
                 <img
                   src={profileAvatar || "/avatar.png"}
-                  className="h-12 w-12 rounded-full ring-2 ring-sky-400 animate-[breath_3.6s_ease-in-out_infinite]"
-
-
+                  className="h-12 w-12 rounded-full ring-2 ring-sky-400 animate-[breath_3.6s_ease-in-out_infinite]" 
                 />
                 <div>
                   <p className="text-sm font-semibold text-slate-100">
