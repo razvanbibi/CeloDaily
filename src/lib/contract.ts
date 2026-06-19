@@ -111,7 +111,6 @@ export const OXTXN_STREAK_ABI = [
     "stateMutability": "view",
     "type": "function"
   },
-
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "totalSilver",
@@ -170,7 +169,6 @@ export const OXTXN_STREAK_ABI = [
 
 
 ] as const;
-
 export const OXTXN_TOKEN_ABI = [
   {
     type: "function",
@@ -179,7 +177,6 @@ export const OXTXN_TOKEN_ABI = [
     inputs: [{ name: "amount", type: "uint256" }],
     outputs: [],
   },
-
   {
     type: "function",
     name: "mint",
@@ -190,7 +187,6 @@ export const OXTXN_TOKEN_ABI = [
     ],
     outputs: [],
   },
-
   {
     type: "function",
     name: "claim",
@@ -201,7 +197,6 @@ export const OXTXN_TOKEN_ABI = [
     ],
     outputs: [],
   },
-
   {
     type: "function",
     name: "multiSend",
@@ -213,8 +208,6 @@ export const OXTXN_TOKEN_ABI = [
     outputs: [],
   },
 ] as const;
-
-
 export const CELODAILY_VAULT_ABI = [
   {
     type: "function",
@@ -252,73 +245,56 @@ export const CELODAILY_VAULT_ABI = [
     outputs: [{ name: "", type: "uint256" }],
   },
 ] as const;
-
-
-
 // MetaMask আছে কিনা চেক
 export function getEthereum() {
   if (typeof window === "undefined") return null;
   return (window as any).ethereum ?? null;
 }
-
 // provider + signer + contract পাওয়ার হেল্পার
 export async function getContractWithSigner() {
   const eth = getEthereum();
   if (!eth) throw new Error("MetaMask / wallet পাওয়া যায়নি");
-
   const provider = new BrowserProvider(eth);
   const signer = await provider.getSigner();
   const network = await provider.getNetwork();
-
   if (network.chainId !== BigInt(42220)) {
     throw new Error("Please switch network to Celo mainnet");
   }
-
   const contract = new Contract(
     OXTXN_STREAK_CONTRACT,
     OXTXN_STREAK_ABI,
     signer
   );
-
   return { provider, signer, contract };
 }
-
 export async function getTokenContractWithSigner() {
   const eth = getEthereum();
   if (!eth) throw new Error("Wallet not found");
-
   const provider = new BrowserProvider(eth);
   const signer = await provider.getSigner();
-
   const contract = new Contract(
     OXTXN_TOKEN_CONTRACT,
     OXTXN_TOKEN_ABI,
     signer
   );
-
   return { provider, signer, contract };
 }
-
 // শুধু read করার জন্য (signer ছাড়াই)
 export async function getReadOnlyContract() {
   const eth = getEthereum();
   if (!eth) throw new Error("MetaMask / wallet পাওয়া যায়নি");
-
   const provider = new BrowserProvider(eth);
   const network = await provider.getNetwork();
   if (network.chainId !== BigInt(42220)) {
     throw new Error("Please switch network to Celo mainnet");
   }
-
   const contract = new Contract(
     OXTXN_STREAK_CONTRACT,
     OXTXN_STREAK_ABI,
     provider
   );
-
   return { provider, contract };
 }
-
 // BigInt টোকেন ভ্যালু কে 18 decimal ধরে ফরম্যাট
 export function formatToken(amount: bigint): string {
   try {
@@ -327,34 +303,26 @@ export function formatToken(amount: bigint): string {
     return amount.toString();
   }
 }
-
 export async function getVaultContractWithSigner() {
   const eth = getEthereum();
   if (!eth) throw new Error("Wallet not found");
-
   const provider = new BrowserProvider(eth);
   const signer = await provider.getSigner();
-
   const contract = new Contract(
     CELODAILY_VAULT_CONTRACT,
     CELODAILY_VAULT_ABI,
     signer
   );
-
   return { provider, signer, contract };
 }
-
 export async function getVaultReadOnlyContract() {
   const eth = getEthereum();
   if (!eth) throw new Error("Wallet not found");
-
   const provider = new BrowserProvider(eth);
-
   const contract = new Contract(
     CELODAILY_VAULT_CONTRACT,
     CELODAILY_VAULT_ABI,
     provider
   );
-
   return { provider, contract };
 }
