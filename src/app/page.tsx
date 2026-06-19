@@ -1209,11 +1209,9 @@ export default function HomePage() {
         const donor = (parsed.donor as string).toLowerCase();
         const amount = Number(
           ethers.formatUnits(parsed.amount as bigint, 18)
-        );
-
+        ); 
         totals[donor] = (totals[donor] ?? 0) + amount;
       }
-
       const entries = Object.entries(totals)
         .map(([address, total]) => ({ address, total }))
         .sort((a, b) => b.total - a.total)
