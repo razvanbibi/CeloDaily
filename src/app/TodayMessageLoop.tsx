@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"; 
-type Props = {
+type Props = { 
   isDarkMode: boolean;
   account: string | null;
 };
