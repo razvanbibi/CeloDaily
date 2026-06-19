@@ -14,7 +14,7 @@ export default function TodayMessageLoop({ isDarkMode, account }: Props) {
             className={`font-medium ${
               isDarkMode ? "text-sky-200" : "text-slate-900"
             }`}
-          >
+          > 
             {account ? "streaker" : "friend"}
           </span>{" "}
         </>
