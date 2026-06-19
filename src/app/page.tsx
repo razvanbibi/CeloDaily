@@ -3522,13 +3522,9 @@ export default function HomePage() {
   ">
                   {highestNumber}
                 </span>
-
-
                 <span className="text-right text-sm font-semibold text-sky-300">
-
                 </span>
               </div>
-
               <div className="flex items-center justify-center gap-2 pt-2 text-[10px] text-slate-400 text-center">
                 <img src="/logo-0x.png" className="h-4 w-4" />
                 CeloDaily Identity NFT
@@ -3544,9 +3540,9 @@ export default function HomePage() {
     mx-auto
     px-6 py-2
     rounded-full
-    border border-sky-400/40
-    backdrop-blur-md
-    text-sm font-semibold
+    border border-sky-400/40 
+    backdrop-blur-md 
+    text-sm font-semibold 
     shadow-[0_0_20px_rgba(56,189,248,0.25)]
     transition-all
 
