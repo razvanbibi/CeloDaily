@@ -870,7 +870,6 @@ export default function HomePage() {
       setStatus("Donation successful 💙");
 
       await loadDonationLeaderboard();
-
       showToast(
         {
           type: "donation",
