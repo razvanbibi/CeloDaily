@@ -356,7 +356,6 @@ body {
   position: relative;
   z-index: 1;
 }
-
 @keyframes youGlow {
   0% {
     background-position: 0% 50%;
