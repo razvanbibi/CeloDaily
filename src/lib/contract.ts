@@ -8,7 +8,7 @@ export const OXTXN_TOKEN_CONTRACT =
 export const CELODAILY_VAULT_CONTRACT =
   "0x6ea4C7e400cC455712e284883E74B49402C5C818" as const;
 export const CELO_CHAIN_ID_HEX = "0xa4ec";
-// ফাংশনের ABI
+// ফা ABI
 export const OXTXN_STREAK_ABI = [
   // reads
   {
