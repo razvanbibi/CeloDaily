@@ -186,7 +186,6 @@ body {
     opacity: 0;
   }
 }
-
 @keyframes leg-run {
   0% {
     transform: translateY(0);
