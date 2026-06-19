@@ -150,13 +150,11 @@ body {
     letter-spacing: 0.12em;
   }
 }
-
 @keyframes basedBlock {
   0% {
     transform: translateX(-8px) scale(0.9);
     opacity: 0;
   }
-
   60% {
     transform: translateX(2px) scale(1.05);
     opacity: 1;
