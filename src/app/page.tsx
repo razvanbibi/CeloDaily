@@ -260,9 +260,8 @@ export default function HomePage() {
   useEffect(() => {
     if (!account) return;
 
-    loadVaultData();
+    loadVaultData(); 
   }, [account]);
-
 
   useEffect(() => {
     // initial animation already true
