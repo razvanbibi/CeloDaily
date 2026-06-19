@@ -17,7 +17,6 @@ export default function TodayMessageLoop({ isDarkMode, account }: Props) {
           >
             {account ? "streaker" : "friend"}
           </span>{" "}
-          👋
         </>
       ),
       second: "Check in every day to grow your streak and earn 0xtxn.",
@@ -32,7 +31,7 @@ export default function TodayMessageLoop({ isDarkMode, account }: Props) {
     {
       duration: 5000,
       first: "Today is a good day to stay loyal",
-      second: "You’re doing better than yesterday 👊",
+      second: "You’re doing better than yesterday",
       hero: false,
     },
   ];
