@@ -298,9 +298,9 @@ export async function getReadOnlyContract() {
 // BigInt টোকেন ভ্যালু কে 18 decimal ধরে ফরম্যাট
 export function formatToken(amount: bigint): string {
   try {
-    return formatUnits(amount, 18);
+    return formatUnits(amount, 18); 
   } catch {
-    return amount.toString();
+    return amount.toString(); 
   }
 }
 export async function getVaultContractWithSigner() {
