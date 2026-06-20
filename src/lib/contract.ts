@@ -66,11 +66,11 @@ export const OXTXN_STREAK_ABI = [
     outputs: [],
   },
   {
-    type: "function",
+    type: "function", 
     name: "claimTokens",
     stateMutability: "nonpayable",
     inputs: [],
-    outputs: [],
+    outputs: [], 
   },
   {
     type: "function",
