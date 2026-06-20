@@ -279,7 +279,7 @@ export async function getTokenContractWithSigner() {
   );
   return { provider, signer, contract };
 }
-// শুধু read করার জন্য (signer ছাড়াই)
+// শুধু read করার জন্য (signer 
 export async function getReadOnlyContract() {
   const eth = getEthereum();
   if (!eth) throw new Error("MetaMask / wallet পাওয়া যায়নি");
