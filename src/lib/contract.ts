@@ -87,8 +87,8 @@ export const OXTXN_STREAK_ABI = [
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "pendingSilver",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "view", 
+    "type": "function" 
   },
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
