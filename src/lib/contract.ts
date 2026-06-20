@@ -295,7 +295,7 @@ export async function getReadOnlyContract() {
   );
   return { provider, contract };
 }
-// BigInt টোকেন ভ্যালু কে 18 decimal ধরে ফরম্যাট
+// BigInt টোকেন ভ্যালু কে 18 decimal ধরে
 export function formatToken(amount: bigint): string {
   try {
     return formatUnits(amount, 18); 
