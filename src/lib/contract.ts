@@ -102,14 +102,14 @@ export const OXTXN_STREAK_ABI = [
     "name": "pendingDiamond",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function" 
   },
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "pendingLegendary",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function" 
   },
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
