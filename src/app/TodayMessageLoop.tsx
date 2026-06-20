@@ -34,7 +34,7 @@ export default function TodayMessageLoop({ isDarkMode, account }: Props) {
       second: "You’re doing better than yesterday",
       hero: false,
     },
-  ];
+  ]; 
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
   useEffect(() => {
