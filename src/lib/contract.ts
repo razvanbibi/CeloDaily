@@ -1,5 +1,5 @@
 // src/lib/contract.ts
-"use client";
+"use client"; 
 import { BrowserProvider, Contract, formatUnits } from "ethers";
 export const OXTXN_STREAK_CONTRACT =
   "0xd7fbd56e05f29184e235C991e680f1D57e1C7924" as const;
