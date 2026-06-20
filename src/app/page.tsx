@@ -55,7 +55,7 @@ function AvatarBubbleStream({ avatar }: { avatar: string }) {
             left: `calc(50% + ${b.left}px)`,
             bottom: "0px",
             width: b.size,
-            height: b.size,
+            height: b.size, 
             animationDuration: "3.8s",
           }}
           onAnimationEnd={() =>
@@ -101,7 +101,7 @@ export default function HomePage() {
   const [ethReady, setEthReady] = useState(false);
   const [topSupporters, setTopSupporters] = useState<Supporter[]>([]);
   const [taglineAnim, setTaglineAnim] = useState(true);
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false); 
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showBadgeInfo, setShowBadgeInfo] = useState(false);
   const [flashGlow, setFlashGlow] = useState(false);
