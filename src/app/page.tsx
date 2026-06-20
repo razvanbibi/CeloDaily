@@ -441,9 +441,8 @@ export default function HomePage() {
       const base64 = reader.result as string;
       saveProfile(profileName, base64);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file); 
   }
-
   async function ensureCeloNetwork() {
     const eth = getEthereum();
     if (!eth) throw new Error("Wallet not found");
@@ -454,7 +453,6 @@ export default function HomePage() {
     }
 
     const chainId = await eth.request({ method: "eth_chainId" });
-
     // Celo mainnet = 0xa4ec (42220)
     if (chainId !== "0xa4ec") {
       try {
@@ -500,7 +498,6 @@ export default function HomePage() {
       if ((window as any).ethereum?.isMiniPay) {
         console.log("Connecting via MiniPay...");
       }
-
       const accounts: string[] = await eth.request({
         method: "eth_requestAccounts",
       });
