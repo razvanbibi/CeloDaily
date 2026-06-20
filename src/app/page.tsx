@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
+import { 
   getEthereum,
   getContractWithSigner,
   getReadOnlyContract,
@@ -10,7 +10,7 @@ import {
   getVaultReadOnlyContract,
 } from "@/lib/contract";
 import Image from "next/image";
-import { ethers } from "ethers";
+import { ethers } from "ethers"; 
 import TodayMessageLoop from "./TodayMessageLoop";
 import { saveDonation } from "@/lib/donationStore";
 type Status = string | null;
