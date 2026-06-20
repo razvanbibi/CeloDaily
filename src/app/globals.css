@@ -139,7 +139,7 @@ body {
     opacity: 0.6;
   }
   50% {
-    transform: scale(1.08);
+    transform: scale(1.08); 
     letter-spacing: 0.14em;
     opacity: 1;
   }
