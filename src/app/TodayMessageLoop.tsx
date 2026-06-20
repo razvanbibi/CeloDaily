@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 type Props = { 
   isDarkMode: boolean;
   account: string | null; 
-};
+}; 
 export default function TodayMessageLoop({ isDarkMode, account }: Props) {
   const slides = [
     {  
