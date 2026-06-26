@@ -147,7 +147,7 @@ export const OXTXN_STREAK_ABI = [
     "type": "function"
   },
   {
-    inputs: [
+    inputs: [ 
       {
         internalType: "address",
         name: "",
@@ -155,7 +155,7 @@ export const OXTXN_STREAK_ABI = [
       },
     ],
     name: "pendingTokens",
-    outputs: [
+    outputs: [ 
       {
         internalType: "uint256",
         name: "",
