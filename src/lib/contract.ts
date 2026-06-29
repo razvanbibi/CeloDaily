@@ -73,7 +73,7 @@ export const OXTXN_STREAK_ABI = [
     outputs: [], 
   },
   {
-    type: "function",
+    type: "function", 
     name: "reverse",
     stateMutability: "nonpayable",
     inputs: [
@@ -84,7 +84,7 @@ export const OXTXN_STREAK_ABI = [
   },
 
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }], 
     "name": "pendingSilver",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view", 
@@ -126,7 +126,7 @@ export const OXTXN_STREAK_ABI = [
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }], 
     "name": "totalDiamond",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -168,8 +168,8 @@ export const OXTXN_STREAK_ABI = [
 
 
 
-] as const;
-export const OXTXN_TOKEN_ABI = [
+] as const;  
+export const OXTXN_TOKEN_ABI  = [
   {
     type: "function",
     name: "burn",
