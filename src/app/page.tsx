@@ -95,7 +95,7 @@ export default function HomePage() {
   const [vaultAmount, setVaultAmount] = useState("1");
   const [vaultBalance, setVaultBalance] = useState("0");
   const [userVaultBalance, setUserVaultBalance] = useState("0");
-  const [donationAmount, setDonationAmount] = useState<string>("1");
+  const [donationAmount, setDonationAmount] = useState<string>("1"); 
   const [profileName, setProfileName] = useState<string>("");
   const [profileAvatar, setProfileAvatar] = useState<string>("/avatar.png");
   const [ethReady, setEthReady] = useState(false);
