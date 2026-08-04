@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
                 (r) => setTimeout(r, 300)
             );
         }
-        return NextResponse.json({
+        return NextResponse.json({ 
             success: true,
             total: hashes.length,
             hashes,
