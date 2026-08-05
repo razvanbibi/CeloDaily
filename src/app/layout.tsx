@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "CeloDaily",
   description: "Daily check-ins on Celo to grow your streak and earn rewards", 
   openGraph: {
-    title: "CeloDaily",
+    title: "CeloDaily", 
     description:
       "Building a daily habit on Celo", 
     images: ["/og-banner.png"],
